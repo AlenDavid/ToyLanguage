@@ -1,0 +1,8 @@
+*
+
+!.gitignore
+!Readme.md
+!LICENSE
+
+!CmakeLists.txt
+!Makefile
