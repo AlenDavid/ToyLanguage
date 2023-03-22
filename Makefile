@@ -1,3 +1,5 @@
-build:
-	cmake -B ./build .
+make:
+	cmake -B ./src .
 
+clean:
+	@rm -rf src
