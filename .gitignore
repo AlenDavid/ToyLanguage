@@ -6,3 +6,6 @@
 
 !CmakeLists.txt
 !Makefile
+
+!tools
+!tools/**

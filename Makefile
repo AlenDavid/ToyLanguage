@@ -1,5 +1,5 @@
 make:
-	cmake -B ./src .
+	cmake -S . -B ./src
 
 clean:
 	@rm -rf src
