@@ -1,2 +1,2 @@
 # toy executable
-add_executable(toy toy.cpp)
+add_executable(Toy toy.cpp)
