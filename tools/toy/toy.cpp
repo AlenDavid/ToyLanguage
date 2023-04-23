@@ -24,9 +24,45 @@
 
 #include "../../src/lib/input_parser.hh"
 
+static std::unique_ptr<llvm::LLVMContext> TheContext;
+static std::unique_ptr<llvm::Module> TheModule;
+static std::unique_ptr<llvm::IRBuilder<>> Builder;
+static llvm::ExitOnError ExitOnErr;
+
+static void InitializeModuleAndPassManager() {
+  // Open a new module.
+  TheContext = std::make_unique<llvm::LLVMContext>();
+  TheModule = std::make_unique<llvm::Module>("toy language", *TheContext);
+
+  // Create a new builder for the module.
+  Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
+}
+
+
+llvm::Value* generateDouble(double num) {
+  return llvm::ConstantFP::get(*TheContext, llvm::APFloat(num));
+}
+
 int main(int argc,  char** argv)
 {
-  std::string result = parse_args(argc, argv);
+  std::cout << "Toy Language compiler" << std::endl;
 
-  std::cout << result << std::endl;
+  llvm::InitializeNativeTarget();
+  llvm::InitializeNativeTargetAsmPrinter();
+  llvm::InitializeNativeTargetAsmParser();
+
+  InitializeModuleAndPassManager();
+
+  // Make the function type:  double(double,double) etc.
+  std::vector<llvm::Type *> Doubles(1, llvm::Type::getDoubleTy(*TheContext));
+  llvm::FunctionType *FT =
+      llvm::FunctionType::get(llvm::Type::getDoubleTy(*TheContext), Doubles, false);
+
+  llvm::Function *TheFunction =
+      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule.get());
+
+  auto *BB = llvm::BasicBlock::Create(*TheContext, "entry", TheFunction);
+  Builder->SetInsertPoint(BB);
+
+  auto n = generateDouble(5);
 }

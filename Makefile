@@ -9,5 +9,8 @@ source:
 hello: build
 	${BUILD_DIR}/tools/toy/toy ./examples/hello.toy hello
 
+call: build
+	${BUILD_DIR}/tools/toy/toy
+
 clean:
 	@rm -rf src
