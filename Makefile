@@ -1,11 +1,13 @@
+BUILD_DIR=./build
+
 build: source
-	make -C ./src
+	make -C ${BUILD_DIR}
 
 source:
-	cmake -S . -B ./src
+	cmake -S . -B ${BUILD_DIR}
 
 hello: build
-	./src/tools/toy/toy ./examples/hello.toy hello
+	${BUILD_DIR}/tools/toy/toy ./examples/hello.toy hello
 
 clean:
 	@rm -rf src
