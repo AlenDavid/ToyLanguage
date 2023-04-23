@@ -9,3 +9,6 @@
 
 !tools
 !tools/**
+
+!src
+!src/**

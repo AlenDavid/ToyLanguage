@@ -18,25 +18,15 @@
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Host.h"
-#include <fstream>
+
 #include <string>
 #include <iostream>
 
+#include "../../src/lib/input_parser.hh"
+
 int main(int argc,  char** argv)
 {
-  if (argc <= 2) {
-    std::cout << "usage: 'toy <path_to_file.toy>' '<path_to_output>'" << std::endl;
-    return 0;
-  }
+  std::string result = parse_args(argc, argv);
 
-  auto filename = argv[1];
-  auto output = argv[2];
-
-  std::ifstream ifs(filename);
-  std::string content( (std::istreambuf_iterator<char>(ifs) ),
-                       (std::istreambuf_iterator<char>()    ) );
-
-  std::cout << content << std::endl;
-
-  return 0;
+  std::cout << result << std::endl;
 }

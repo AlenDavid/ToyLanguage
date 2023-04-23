@@ -1,0 +1,4 @@
+# lib library
+
+ADD_LIBRARY(Libs input_parser.cpp)
+
