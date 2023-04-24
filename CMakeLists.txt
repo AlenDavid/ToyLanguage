@@ -11,7 +11,7 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 message("LLVM_INCLUDE_DIRS=${LLVM_INCLUDE_DIRS}")
 message("LLVM_DEFINITIONS=${LLVM_DEFINITIONS}")
 
-llvm_map_components_to_libnames(LLVM_LIBS core orcjit native)
+llvm_map_components_to_libnames(LLVM_LIBS codegen target core orcjit native)
 
 add_subdirectory(src/lib)
 add_subdirectory(tools/toy)

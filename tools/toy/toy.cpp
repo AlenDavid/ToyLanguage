@@ -60,9 +60,16 @@ int main(int argc,  char** argv)
 
   llvm::Function *TheFunction =
       llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule.get());
+  llvm::BasicBlock *BB = llvm::BasicBlock::Create(*TheContext, "entry", TheFunction);
 
-  auto *BB = llvm::BasicBlock::Create(*TheContext, "entry", TheFunction);
   Builder->SetInsertPoint(BB);
 
+  if (llvm::Value *RetVal = llvm::ConstantFP::get(*TheContext, llvm::APFloat(5.0))) {
+    // Finish off the function.
+    Builder->CreateRet(RetVal);
+  }
+
   auto n = generateDouble(5);
+
+  llvm::errs() << *TheFunction;
 }
