@@ -21,6 +21,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include "../../src/lib/input_parser.hh"
 
@@ -38,25 +39,57 @@ static void InitializeModuleAndPassManager() {
   Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
 }
 
-
-llvm::Value* generateDouble(double num) {
-  return llvm::ConstantFP::get(*TheContext, llvm::APFloat(num));
-}
-
 int main(int argc,  char** argv)
 {
+  auto CPU = "generic";
+  auto Features = "";
+
+  std::string Error;
   std::cout << "Toy Language compiler" << std::endl;
 
   llvm::InitializeNativeTarget();
   llvm::InitializeNativeTargetAsmPrinter();
   llvm::InitializeNativeTargetAsmParser();
+  llvm::InitializeAllTargetInfos();
+  llvm::InitializeAllTargets();
+  llvm::InitializeAllTargetMCs();
+  llvm::InitializeAllAsmParsers();
+  llvm::InitializeAllAsmPrinters();
 
   InitializeModuleAndPassManager();
 
+  auto TargetTriple = llvm::sys::getDefaultTargetTriple();
+  auto Target = llvm::TargetRegistry::lookupTarget(TargetTriple, Error);
+
+  // Print an error and exit if we couldn't find the requested target.
+  // This generally occurs if we've forgotten to initialise the
+  // TargetRegistry or we have a bogus target triple.
+  if (!Target) {
+    llvm::errs() << Error;
+    return 1;
+  }
+
+  llvm::TargetOptions opt;
+  auto RM = std::optional<llvm::Reloc::Model>();
+  auto TargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
+
+  TheModule->setDataLayout(TargetMachine->createDataLayout());
+  TheModule->setTargetTriple(TargetTriple);
+
+  auto Filename = "output.o";
+  std::error_code EC;
+  llvm::raw_fd_ostream dest(Filename, EC, llvm::sys::fs::OF_None);
+
+  if (EC) {
+    llvm::errs() << "Could not open file: " << EC.message();
+    return 1;
+  }
+
   // Make the function type:  double(double,double) etc.
   std::vector<llvm::Type *> Doubles(1, llvm::Type::getDoubleTy(*TheContext));
+  std::vector<llvm::Type *> Empty(0);
   llvm::FunctionType *FT =
-      llvm::FunctionType::get(llvm::Type::getDoubleTy(*TheContext), Doubles, false);
+      llvm::FunctionType::get(llvm::Type::getInt32Ty(*TheContext), Empty, false);
 
   llvm::Function *TheFunction =
       llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule.get());
@@ -64,12 +97,18 @@ int main(int argc,  char** argv)
 
   Builder->SetInsertPoint(BB);
 
-  if (llvm::Value *RetVal = llvm::ConstantFP::get(*TheContext, llvm::APFloat(5.0))) {
+  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*TheContext), 5)) {
     // Finish off the function.
     Builder->CreateRet(RetVal);
   }
 
-  auto n = generateDouble(5);
+  llvm::legacy::PassManager pass;
 
-  llvm::errs() << *TheFunction;
+  if (TargetMachine->addPassesToEmitFile(pass, dest, nullptr, llvm::CGFT_ObjectFile)) {
+    llvm::errs() << "TargetMachine can't emit a file of this type";
+    return 1;
+  }
+
+  pass.run(*TheModule);
+  dest.flush();
 }
