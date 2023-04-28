@@ -1,4 +1,4 @@
 # lib library
 
-ADD_LIBRARY(Libs input_parser.cpp)
+add_library(Libs input_parser/input_parser.cpp)
 

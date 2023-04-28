@@ -23,7 +23,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "../../src/lib/input_parser.hh"
+#include "../../src/lib/input_parser/input_parser.hh"
 
 int main(int argc,  char** argv)
 {
