@@ -32,7 +32,7 @@ int main(int argc,  char** argv)
 
   auto Context = llvm::LLVMContext();
   auto Module = llvm::Module("toy language", Context);
-  auto Builder = llvm::IRBuilder<>(Context);
+  auto Builder = llvm::IRBuilder(Context);
   llvm::ExitOnError ExitOnErr;
 
   llvm::InitializeNativeTarget();
