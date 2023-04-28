@@ -30,7 +30,7 @@ int main(int argc,  char** argv)
 {
   std::cout << "Toy Language compiler" << std::endl;
 
-  std::unique_ptr<llvm::LLVMContext> TheContext;
+  llvm::LLVMContext Context;
   std::unique_ptr<llvm::Module> TheModule;
   std::unique_ptr<llvm::IRBuilder<>> Builder;
   llvm::ExitOnError ExitOnErr;
@@ -44,24 +44,22 @@ int main(int argc,  char** argv)
   llvm::InitializeAllAsmParsers();
   llvm::InitializeAllAsmPrinters();
 
-  // Open a new module.
-  TheContext = std::make_unique<llvm::LLVMContext>();
-  TheModule = std::make_unique<llvm::Module>("toy language", *TheContext);
+  TheModule = std::make_unique<llvm::Module>("toy language", Context);
 
   // Create a new builder for the module.
-  Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
+  Builder = std::make_unique<llvm::IRBuilder<>>(Context);
 
   std::vector<llvm::Type *> Empty(0);
   llvm::FunctionType *FT =
-      llvm::FunctionType::get(llvm::Type::getInt32Ty(*TheContext), Empty, false);
+      llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
 
   llvm::Function *TheFunction =
       llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule.get());
-  llvm::BasicBlock *BB = llvm::BasicBlock::Create(*TheContext, "entry", TheFunction);
+  llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "entry", TheFunction);
 
   Builder->SetInsertPoint(BB);
 
-  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*TheContext), 5)) {
+  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 5)) {
     // Finish off the function.
     Builder->CreateRet(RetVal);
   }
