@@ -30,8 +30,8 @@ int main(int argc,  char** argv)
 {
   std::cout << "Toy Language compiler" << std::endl;
 
-  llvm::LLVMContext Context;
-  std::unique_ptr<llvm::Module> TheModule;
+  auto Context = llvm::LLVMContext();
+  auto Module = llvm::Module("toy language", Context);
   std::unique_ptr<llvm::IRBuilder<>> Builder;
   llvm::ExitOnError ExitOnErr;
 
@@ -44,8 +44,6 @@ int main(int argc,  char** argv)
   llvm::InitializeAllAsmParsers();
   llvm::InitializeAllAsmPrinters();
 
-  TheModule = std::make_unique<llvm::Module>("toy language", Context);
-
   // Create a new builder for the module.
   Builder = std::make_unique<llvm::IRBuilder<>>(Context);
 
@@ -54,7 +52,7 @@ int main(int argc,  char** argv)
       llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
 
   llvm::Function *TheFunction =
-      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule.get());
+      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", Module);
   llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "entry", TheFunction);
 
   Builder->SetInsertPoint(BB);
@@ -64,5 +62,5 @@ int main(int argc,  char** argv)
     Builder->CreateRet(RetVal);
   }
 
-  run_pass_on_module(TheModule.get());
+  run_pass_on_module(&Module);
 }
