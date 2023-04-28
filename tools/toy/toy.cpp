@@ -31,7 +31,7 @@ int main(int argc,  char** argv)
   std::cout << "Toy Language compiler" << std::endl;
 
   auto Context = llvm::LLVMContext();
-  auto Module = llvm::Module("toy language", Context);
+  auto Module = std::make_unique<llvm::Module>("toy language", Context);
   auto Builder = llvm::IRBuilder(Context);
   llvm::ExitOnError ExitOnErr;
 
@@ -49,7 +49,7 @@ int main(int argc,  char** argv)
       llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
 
   llvm::Function *TheFunction =
-      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", Module);
+      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", *Module.get());
   llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "entry", TheFunction);
 
   Builder.SetInsertPoint(BB);
@@ -59,5 +59,5 @@ int main(int argc,  char** argv)
     Builder.CreateRet(RetVal);
   }
 
-  run_pass_on_module(&Module);
+  run_pass_on_module(Module.get());
 }
