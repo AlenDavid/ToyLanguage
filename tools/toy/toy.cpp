@@ -32,7 +32,7 @@ int main(int argc,  char** argv)
 
   auto Context = llvm::LLVMContext();
   auto Module = llvm::Module("toy language", Context);
-  std::unique_ptr<llvm::IRBuilder<>> Builder;
+  auto Builder = llvm::IRBuilder<>(Context);
   llvm::ExitOnError ExitOnErr;
 
   llvm::InitializeNativeTarget();
@@ -44,9 +44,6 @@ int main(int argc,  char** argv)
   llvm::InitializeAllAsmParsers();
   llvm::InitializeAllAsmPrinters();
 
-  // Create a new builder for the module.
-  Builder = std::make_unique<llvm::IRBuilder<>>(Context);
-
   std::vector<llvm::Type *> Empty(0);
   llvm::FunctionType *FT =
       llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
@@ -55,11 +52,11 @@ int main(int argc,  char** argv)
       llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", Module);
   llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "entry", TheFunction);
 
-  Builder->SetInsertPoint(BB);
+  Builder.SetInsertPoint(BB);
 
   if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 5)) {
     // Finish off the function.
-    Builder->CreateRet(RetVal);
+    Builder.CreateRet(RetVal);
   }
 
   run_pass_on_module(&Module);
