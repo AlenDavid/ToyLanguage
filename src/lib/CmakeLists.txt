@@ -1,4 +1,7 @@
 # lib library
 
-add_library(Libs input_parser/input_parser.cpp)
+add_library(Libs
+  input_parser/input_parser.cpp
+  module_emmiter/module_emmiter.cpp
+)
 

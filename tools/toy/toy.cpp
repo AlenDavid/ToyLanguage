@@ -24,19 +24,16 @@
 #include <fstream>
 
 #include "../../src/lib/input_parser/input_parser.hh"
+#include "../../src/lib/module_emmiter/module_emmiter.hh"
 
 int main(int argc,  char** argv)
 {
+  std::cout << "Toy Language compiler" << std::endl;
+
   std::unique_ptr<llvm::LLVMContext> TheContext;
   std::unique_ptr<llvm::Module> TheModule;
   std::unique_ptr<llvm::IRBuilder<>> Builder;
   llvm::ExitOnError ExitOnErr;
-
-  auto CPU = "generic";
-  auto Features = "";
-
-  std::string Error;
-  std::cout << "Toy Language compiler" << std::endl;
 
   llvm::InitializeNativeTarget();
   llvm::InitializeNativeTargetAsmPrinter();
@@ -54,35 +51,6 @@ int main(int argc,  char** argv)
   // Create a new builder for the module.
   Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
 
-  auto TargetTriple = llvm::sys::getDefaultTargetTriple();
-  auto Target = llvm::TargetRegistry::lookupTarget(TargetTriple, Error);
-
-  // Print an error and exit if we couldn't find the requested target.
-  // This generally occurs if we've forgotten to initialise the
-  // TargetRegistry or we have a bogus target triple.
-  if (!Target) {
-    llvm::errs() << Error;
-    return 1;
-  }
-
-  llvm::TargetOptions opt;
-  auto RM = std::optional<llvm::Reloc::Model>();
-  auto TargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
-
-  TheModule->setDataLayout(TargetMachine->createDataLayout());
-  TheModule->setTargetTriple(TargetTriple);
-
-  auto Filename = "output.o";
-  std::error_code EC;
-  llvm::raw_fd_ostream dest(Filename, EC, llvm::sys::fs::OF_None);
-
-  if (EC) {
-    llvm::errs() << "Could not open file: " << EC.message();
-    return 1;
-  }
-
-  // Make the function type:  double(double,double) etc.
-  std::vector<llvm::Type *> Doubles(1, llvm::Type::getDoubleTy(*TheContext));
   std::vector<llvm::Type *> Empty(0);
   llvm::FunctionType *FT =
       llvm::FunctionType::get(llvm::Type::getInt32Ty(*TheContext), Empty, false);
@@ -98,14 +66,5 @@ int main(int argc,  char** argv)
     Builder->CreateRet(RetVal);
   }
 
-  // create object file
-  llvm::legacy::PassManager pass;
-
-  if (TargetMachine->addPassesToEmitFile(pass, dest, nullptr, llvm::CGFT_ObjectFile)) {
-    llvm::errs() << "TargetMachine can't emit a file of this type";
-    return 1;
-  }
-
-  pass.run(*TheModule);
-  dest.flush();
+  run_pass_on_module(TheModule.get());
 }
