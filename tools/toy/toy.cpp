@@ -25,22 +25,13 @@
 
 #include "../../src/lib/input_parser.hh"
 
-static std::unique_ptr<llvm::LLVMContext> TheContext;
-static std::unique_ptr<llvm::Module> TheModule;
-static std::unique_ptr<llvm::IRBuilder<>> Builder;
-static llvm::ExitOnError ExitOnErr;
-
-static void InitializeModuleAndPassManager() {
-  // Open a new module.
-  TheContext = std::make_unique<llvm::LLVMContext>();
-  TheModule = std::make_unique<llvm::Module>("toy language", *TheContext);
-
-  // Create a new builder for the module.
-  Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
-}
-
 int main(int argc,  char** argv)
 {
+  std::unique_ptr<llvm::LLVMContext> TheContext;
+  std::unique_ptr<llvm::Module> TheModule;
+  std::unique_ptr<llvm::IRBuilder<>> Builder;
+  llvm::ExitOnError ExitOnErr;
+
   auto CPU = "generic";
   auto Features = "";
 
@@ -56,7 +47,12 @@ int main(int argc,  char** argv)
   llvm::InitializeAllAsmParsers();
   llvm::InitializeAllAsmPrinters();
 
-  InitializeModuleAndPassManager();
+  // Open a new module.
+  TheContext = std::make_unique<llvm::LLVMContext>();
+  TheModule = std::make_unique<llvm::Module>("toy language", *TheContext);
+
+  // Create a new builder for the module.
+  Builder = std::make_unique<llvm::IRBuilder<>>(*TheContext);
 
   auto TargetTriple = llvm::sys::getDefaultTargetTriple();
   auto Target = llvm::TargetRegistry::lookupTarget(TargetTriple, Error);
@@ -102,6 +98,7 @@ int main(int argc,  char** argv)
     Builder->CreateRet(RetVal);
   }
 
+  // create object file
   llvm::legacy::PassManager pass;
 
   if (TargetMachine->addPassesToEmitFile(pass, dest, nullptr, llvm::CGFT_ObjectFile)) {

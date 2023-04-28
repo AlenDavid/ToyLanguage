@@ -12,5 +12,8 @@ hello: build
 call: build
 	${BUILD_DIR}/tools/toy/toy
 
+compile: call
+	clang++ output.o -o main
+
 clean:
 	@rm -rf src
