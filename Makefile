@@ -6,14 +6,12 @@ build: source
 source:
 	cmake -S . -B ${BUILD_DIR}
 
-hello: build
-	${BUILD_DIR}/tools/toy/toy ./examples/hello.toy hello
+example: build
+	${BUILD_DIR}/tools/example/example ./examples/hello.toy hello
 
-call: build
-	${BUILD_DIR}/tools/toy/toy
-
-compile: call
+run_example: example
 	clang++ output.o -o main
+	./main
 
 clean:
 	@rm -rf src

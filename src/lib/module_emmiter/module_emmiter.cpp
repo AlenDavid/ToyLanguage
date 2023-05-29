@@ -9,9 +9,12 @@
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Host.h"
 
-int run_pass_on_module(llvm::Module* Module)
+int run_pass_on_module(llvm::Module* Module, const char* Filename)
 {
-  auto Filename = "output.o";
+  if (Filename == nullptr) {
+    Filename = "output.o";
+  }
+
   auto CPU = "generic";
   auto Features = "";
   std::string Error;

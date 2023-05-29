@@ -191,7 +191,9 @@ llvm_map_components_to_libnames(LLVM_LIBS
 
 add_subdirectory(src/lib)
 add_subdirectory(tools/toy)
+add_subdirectory(tools/example)
 
 include_directories("${CMAKE_CURRENT_LIST_DIR}")
 
 target_link_libraries(Toy ${LLVM_LIBS})
+target_link_libraries(Example ${LLVM_LIBS})

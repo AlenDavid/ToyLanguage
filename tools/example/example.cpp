@@ -54,7 +54,7 @@ int main(int argc,  char** argv)
 
   Builder.SetInsertPoint(BB);
 
-  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 5)) {
+  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 27)) {
     // Finish off the function.
     Builder.CreateRet(RetVal);
   }
