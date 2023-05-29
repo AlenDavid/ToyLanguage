@@ -13,5 +13,8 @@ run_example: example
 	clang++ output.o -o main
 	./main
 
+compile: build
+	${BUILD_DIR}/tools/toy/toy ./examples/hello.toy hello
+
 clean:
 	@rm -rf src

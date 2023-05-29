@@ -24,40 +24,16 @@
 #include <fstream>
 
 #include "../../src/lib/input_parser/input_parser.hh"
-#include "../../src/lib/module_emmiter/module_emmiter.hh"
 
 int main(int argc,  char** argv)
 {
   std::cout << "Toy Language compiler" << std::endl;
 
-  auto Context = llvm::LLVMContext();
-  auto Module = std::make_unique<llvm::Module>("toy language", Context);
-  auto Builder = llvm::IRBuilder(Context);
-  llvm::ExitOnError ExitOnErr;
+  auto code = parse_args(argc, argv);
 
-  llvm::InitializeNativeTarget();
-  llvm::InitializeNativeTargetAsmPrinter();
-  llvm::InitializeNativeTargetAsmParser();
-  llvm::InitializeAllTargetInfos();
-  llvm::InitializeAllTargets();
-  llvm::InitializeAllTargetMCs();
-  llvm::InitializeAllAsmParsers();
-  llvm::InitializeAllAsmPrinters();
-
-  std::vector<llvm::Type *> Empty(0);
-  llvm::FunctionType *FT =
-      llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
-
-  llvm::Function *TheFunction =
-      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", *Module.get());
-  llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "entry", TheFunction);
-
-  Builder.SetInsertPoint(BB);
-
-  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 5)) {
-    // Finish off the function.
-    Builder.CreateRet(RetVal);
+  if (code == "") {
+    return 1;
   }
 
-  run_pass_on_module(Module.get(), "output.o");
+  std::cout << code;
 }
