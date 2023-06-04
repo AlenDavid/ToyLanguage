@@ -3,5 +3,6 @@
 add_library(Libs
   input_parser/input_parser.cpp
   module_emmiter/module_emmiter.cpp
+  syntax_checker/syntax_checker.cpp
 )
 
