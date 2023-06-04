@@ -31,35 +31,47 @@ enum Token
 
   // commands
   tok_def = -2,
+  tok_equal = -3,
 
   // primary
-  tok_identifier = -14,
-  tok_number = -15,
+  tok_identifier = -21,
+  tok_int = -22,
+  tok_double = -23,
+  tok_string = -24,
 
   // control
-  tok_return = -50,
+  tok_end = -50,
+  tok_return = -51,
+  tok_open_parenthesis = -52,
+  tok_close_parenthesis = -53,
+  tok_open_curly = -54,
+  tok_close_curly = -55,
 };
 
 class SyntaxChecker
 {
-private:
+public:
   int LastChar = ' ';
   int CaretPlace = 0;
   int CurrentLine = 0;
   int CharCounter = 0;
 
-  std::string Identifier;
-  double NumericValue;
-  std::string Code;
+  std::string CurrentIdentifier;
+  double CurrentNumericValue;
 
-public:
+  const std::string Code;
+
   std::vector<Token> Tokens;
+  std::vector<std::string> Identifiers;
 
   explicit SyntaxChecker(std::string Code) : Code(std::move(Code)) {}
 
   int NextChar()
   {
-    auto c = Code.at(CharCounter);
+    if (Code.length() <= CharCounter)
+      return EOF;
+
+    char c = Code[CharCounter];
     CharCounter++;
     CaretPlace++;
 
@@ -78,46 +90,97 @@ public:
     while (isspace(LastChar))
       LastChar = NextChar();
 
+    if (ispunct(LastChar)) // [!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]
+    {
+      CurrentIdentifier = (char)LastChar;
+      LastChar = NextChar();
+
+      if (CurrentIdentifier == "=")
+      {
+        Tokens.push_back(tok_equal);
+        return tok_equal;
+      }
+
+      if (CurrentIdentifier == "{")
+      {
+        Tokens.push_back(tok_open_curly);
+        return tok_open_curly;
+      }
+
+      if (CurrentIdentifier == "}")
+      {
+        Tokens.push_back(tok_close_curly);
+        return tok_close_curly;
+      }
+
+      if (CurrentIdentifier == "(")
+      {
+        Tokens.push_back(tok_open_parenthesis);
+        return tok_open_parenthesis;
+      }
+
+      if (CurrentIdentifier == ")")
+      {
+        Tokens.push_back(tok_close_parenthesis);
+        return tok_close_parenthesis;
+      }
+
+      if (CurrentIdentifier == ";")
+      {
+        Tokens.push_back(tok_end);
+        return tok_end;
+      }
+    }
+
     if (isalpha(LastChar)) // [a-zA-Z][a-zA-Z0-9]*
     {
-      Identifier = (char)LastChar;
+      CurrentIdentifier = (char)LastChar;
       LastChar = NextChar();
 
       while (isalnum(LastChar))
       {
-        Identifier += (char)LastChar;
+        CurrentIdentifier += (char)LastChar;
         LastChar = NextChar();
       }
 
-      if (Identifier == "def")
+      if (CurrentIdentifier == "def")
       {
         Tokens.push_back(tok_def);
         return tok_def;
       }
 
-      if (Identifier == "return")
+      if (CurrentIdentifier == "return")
       {
         Tokens.push_back(tok_return);
         return tok_return;
       }
 
       Tokens.push_back(tok_identifier);
+      Identifiers.push_back(CurrentIdentifier);
+
       return tok_identifier;
     }
 
-    if (isdigit(LastChar) || LastChar == '.')
+    if (isdigit(LastChar))
     { // Number: [0-9.]+
       std::string NumStr;
+      bool AlreadyUsedDot = false;
       do
       {
+        if (!AlreadyUsedDot && (char)LastChar == '.')
+        {
+          AlreadyUsedDot = true;
+        }
+
         NumStr += (char)LastChar;
         LastChar = NextChar();
-      } while (isdigit(LastChar));
+      } while (isdigit(LastChar) || (!AlreadyUsedDot));
 
-      NumericValue = strtod(NumStr.c_str(), nullptr);
+      CurrentNumericValue = strtod(NumStr.c_str(), nullptr);
 
-      Tokens.push_back(tok_number);
-      return tok_number;
+      Identifiers.push_back(NumStr);
+      Tokens.push_back(tok_double);
+      return tok_double;
     }
 
     if (LastChar == '#')
@@ -164,12 +227,18 @@ int main(int argc, char **argv)
 
   auto parser = SyntaxChecker(code);
 
-  while (parser.GetToken() < 0)
+  while (parser.GetToken() != tok_eof)
     ;
 
+  std::cout << "Tokens:\n\n";
   for (auto i : parser.Tokens)
   {
+    std::cout << i << std::endl;
+  }
 
+  std::cout << "Identifiers:\n\n";
+  for (auto i : parser.Identifiers)
+  {
     std::cout << i << std::endl;
   }
 }
