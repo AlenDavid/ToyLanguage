@@ -16,6 +16,8 @@ namespace analysis
     explicit SyntaxChecker(lexical::LexicalFactory &factory);
     void EnableDebug();
     void Debug(std::string);
+    bool B();
+    bool D();
     bool E();
     void G();
     void Report(std::string);

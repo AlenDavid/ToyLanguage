@@ -49,6 +49,43 @@ namespace analysis
     oss.clear();
   }
 
+  // Syntax check for blocks of code.
+  bool SyntaxChecker::B()
+  {
+    // <DEFS>
+    G();
+
+    if (CurrentToken == Token::tok_eof)
+    {
+      return true;
+    }
+
+    // <RETURN> <E>;
+    if (CurrentToken != Token::tok_return)
+    {
+      Report("return");
+      return false;
+    }
+
+    auto e = E();
+
+    Debug("return " + std::to_string(Factory.CurrentNumericValue));
+
+    if (!e)
+    {
+      Report("expression");
+      return false;
+    }
+
+    if (CurrentToken != Token::tok_close_curly)
+    {
+      Report("}");
+      return false;
+    }
+
+    return true;
+  }
+
   // For expressions
   bool SyntaxChecker::E()
   {
@@ -93,10 +130,12 @@ namespace analysis
     {
       // consume text
       CurrentToken = Factory.NextToken();
-      Debug("Token: " + From(CurrentToken));
+      Debug("Token: " + From(CurrentToken) + " \"" + Factory.CurrentIdentifier + "\"");
 
       // consume "
       CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
       if (CurrentToken != Token::tok_string)
       {
         Report("\"");
@@ -117,6 +156,60 @@ namespace analysis
     return false;
   }
 
+  // Syntax check for definitions.
+  bool SyntaxChecker::D()
+  {
+    Debug("D()");
+
+    // consume ID.
+    CurrentToken = Factory.NextToken();
+    Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
+
+    if (CurrentToken != Token::tok_identifier)
+    {
+      Report("name");
+      return false;
+    }
+
+    // consume next token.
+    CurrentToken = Factory.NextToken();
+    Debug("Token: " + From(CurrentToken));
+
+    // <DEF> <ID> = <E>
+    if (CurrentToken == Token::tok_equal)
+      return E();
+
+    // <DEF> <ID> <PARAMS> <BLOCK>
+    // <PARAMS> |== (<PARAM>)
+    if (CurrentToken == Token::tok_open_parenthesis)
+    {
+      // TODO: check parameters
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken != Token::tok_close_parenthesis)
+      {
+        Report(")");
+        return false;
+      }
+
+      // consume {
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken != Token::tok_open_curly)
+      {
+        Report("{");
+        return false;
+      }
+
+      return B();
+    }
+
+    Report("Unkown");
+    return false;
+  }
+
   // For grammar checking
   void SyntaxChecker::G()
   {
@@ -126,82 +219,8 @@ namespace analysis
     {
       Debug("Token: " + From(CurrentToken));
 
-      // <BLOCK> |== "{" <DEFS> ";" <RETURN> <VALUE> ";" "}"
-      if (CurrentToken == Token::tok_open_curly)
-      {
-        Debug("BEFORE G");
-        G();
-        Debug("AFTER G");
-
-        CurrentToken = Factory.NextToken();
-
-        if (CurrentToken != Token::tok_close_curly)
-        {
-          Report("}");
-        }
-
+      if (CurrentToken == Token::tok_def && !D())
         break;
-      }
-
-      if (CurrentToken == Token::tok_return)
-      {
-        auto e = E();
-
-        Debug("return " + std::to_string(Factory.CurrentNumericValue));
-
-        if (!e)
-        {
-          Report("expression");
-        }
-
-        break;
-      }
-
-      if (CurrentToken == Token::tok_def)
-      {
-        CurrentToken = Factory.NextToken();
-        Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
-
-        if (CurrentToken != Token::tok_identifier)
-        {
-          Report("name");
-          break;
-        }
-
-        CurrentToken = Factory.NextToken();
-        Debug("Token: " + From(CurrentToken));
-
-        // <DEF> <ID> = <E>
-        if (CurrentToken == Token::tok_equal)
-        {
-          if (!E())
-          {
-            Report("def");
-            break;
-          }
-        }
-
-        // <DEF> <ID> <PARAMS> <BLOCK>
-        // <PARAMS> |== (<PARAM>)
-        if (CurrentToken == Token::tok_open_parenthesis)
-        {
-          // TODO: check parameters
-          CurrentToken = Factory.NextToken();
-          Debug("Token: " + From(CurrentToken));
-
-          if (CurrentToken != Token::tok_close_parenthesis)
-          {
-            Report(")");
-            break;
-          }
-        }
-
-        if (CurrentToken == Token::tok_eof)
-        {
-          Report("code");
-          break;
-        }
-      }
     }
   }
 } // namespace analysis

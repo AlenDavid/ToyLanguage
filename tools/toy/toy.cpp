@@ -56,12 +56,5 @@ int main(int argc, char **argv)
     std::cout << s << std::endl;
   }
 
-  std::cout << "\nIdentifiers: " << std::endl;
-
-  for (auto s : checker.Factory.Identifiers)
-  {
-    std::cout << s << std::endl;
-  }
-
   return checker.Errs.size();
 }

@@ -23,7 +23,7 @@ namespace lexical
     CharCounter++;
     CaretPlace++;
 
-    if (c == '\n')
+    if (c == '\n' || c == '\r')
     {
       CaretPlace = 0;
       CurrentLine++;
@@ -38,7 +38,7 @@ namespace lexical
     while (isspace(CurrentChar))
       CurrentChar = NextChar();
 
-    if (ispunct(CurrentChar)) // [!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]
+    if (ispunct(CurrentChar) && CurrentChar != '#') // [!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]
     {
       CurrentIdentifier = (char)CurrentChar;
       CurrentChar = NextChar();
