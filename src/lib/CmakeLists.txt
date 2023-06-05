@@ -4,6 +4,7 @@ add_library(Libs
   input_parser/input_parser.cpp
   module_emmiter/module_emmiter.cpp
   lexical/lexical.cpp
+  syntactic_analysis/syntactic_analysis.cpp
 )
 
 target_compile_definitions(Libs PUBLIC Libs)

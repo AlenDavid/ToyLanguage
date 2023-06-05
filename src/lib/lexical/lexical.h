@@ -1,8 +1,8 @@
 #include <string>
 #include "../tokens/tokens.h"
 
-#ifndef TOY_LIB_SYNTAX_CHECKER_H
-#define TOY_LIB_SYNTAX_CHECKER_H
+#ifndef TOY_LIB_LEXICAL_H
+#define TOY_LIB_LEXICAL_H
 
 namespace lexical
 {
@@ -30,4 +30,4 @@ namespace lexical
     tokens::Token GetToken();
   };
 }
-#endif // TOY_LIB_SYNTAX_CHECKER_H
+#endif // TOY_LIB_LEXICAL_H

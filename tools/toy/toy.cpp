@@ -25,9 +25,11 @@
 
 #include "../../src/lib/input_parser/input_parser.h"
 #include "../../src/lib/lexical/lexical.h"
+#include "../../src/lib/syntactic_analysis/syntactic_analysis.h"
 
 using namespace tokens;
 using namespace lexical;
+using namespace analysis;
 
 int main(int argc, char **argv)
 {
@@ -41,6 +43,7 @@ int main(int argc, char **argv)
   }
 
   auto factory = LexicalFactory(code);
+  auto checker = SyntaxChecker();
 
   while (factory.GetToken() != Token::tok_eof)
     ;
