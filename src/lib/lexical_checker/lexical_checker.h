@@ -9,6 +9,7 @@ namespace lexical
   class SyntaxChecker
   {
   public:
+    bool Debug = false;
     int LastChar = ' ';
     int CaretPlace = 0;
     int CurrentLine = 0;
@@ -24,6 +25,7 @@ namespace lexical
 
     explicit SyntaxChecker(std::string Code);
 
+    void EnableDebug();
     int NextChar();
     tokens::Token GetToken();
   };

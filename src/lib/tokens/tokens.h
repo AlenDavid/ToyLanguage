@@ -9,6 +9,10 @@ namespace tokens
     // commands
     tok_def = -2,
     tok_equal = -3,
+    tok_plus = -4,
+    tok_minus = -5,
+    tok_times = -6,
+    tok_divider = -7,
 
     // primary
     tok_identifier = -21,
@@ -23,6 +27,9 @@ namespace tokens
     tok_close_parenthesis = -53,
     tok_open_curly = -54,
     tok_close_curly = -55,
+    tok_if = -56,
+    tok_for = -57,
+    tok_greater_than = -58,
   };
 }
 

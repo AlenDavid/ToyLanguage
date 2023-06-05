@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "./lexical_checker.h"
 #include "../tokens/tokens.h"
@@ -8,6 +9,10 @@ using namespace tokens;
 namespace lexical
 {
   SyntaxChecker::SyntaxChecker(std::string Code) : Code(std::move(Code)) {}
+  void SyntaxChecker::EnableDebug()
+  {
+    Debug = true;
+  }
 
   int SyntaxChecker::NextChar()
   {
@@ -42,6 +47,36 @@ namespace lexical
       {
         Tokens.push_back(Token::tok_equal);
         return Token::tok_equal;
+      }
+
+      if (CurrentIdentifier == ">")
+      {
+        Tokens.push_back(Token::tok_greater_than);
+        return Token::tok_greater_than;
+      }
+
+      if (CurrentIdentifier == "+")
+      {
+        Tokens.push_back(Token::tok_plus);
+        return Token::tok_plus;
+      }
+
+      if (CurrentIdentifier == "-")
+      {
+        Tokens.push_back(Token::tok_minus);
+        return Token::tok_minus;
+      }
+
+      if (CurrentIdentifier == "*")
+      {
+        Tokens.push_back(Token::tok_times);
+        return Token::tok_times;
+      }
+
+      if (CurrentIdentifier == "/")
+      {
+        Tokens.push_back(Token::tok_divider);
+        return Token::tok_divider;
       }
 
       if (CurrentIdentifier == "{")
@@ -92,6 +127,18 @@ namespace lexical
         return Token::tok_def;
       }
 
+      if (CurrentIdentifier == "if")
+      {
+        Tokens.push_back(Token::tok_if);
+        return Token::tok_if;
+      }
+
+      if (CurrentIdentifier == "for")
+      {
+        Tokens.push_back(Token::tok_for);
+        return Token::tok_for;
+      }
+
       if (CurrentIdentifier == "return")
       {
         Tokens.push_back(Token::tok_return);
@@ -117,7 +164,7 @@ namespace lexical
 
         NumStr += (char)LastChar;
         LastChar = NextChar();
-      } while (isdigit(LastChar) || (!AlreadyUsedDot));
+      } while (isdigit(LastChar) || (!AlreadyUsedDot && LastChar == '.'));
 
       CurrentNumericValue = strtod(NumStr.c_str(), nullptr);
 
