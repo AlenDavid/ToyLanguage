@@ -1,14 +1,17 @@
+SRC_DIR=.
 BUILD_DIR=./build
 
 build: source
 	make -C ${BUILD_DIR}
 
 source:
-	cmake -S . -B ${BUILD_DIR}
+	cmake -S ${SRC_DIR} -B ${BUILD_DIR}
 
+# to be removed in the future.
 example: build
 	${BUILD_DIR}/tools/example/example ./examples/hello.toy hello
 
+# to be removed in the future.
 run_example: example
 	clang++ output.o -o main
 	./main
@@ -16,5 +19,10 @@ run_example: example
 compile: build
 	${BUILD_DIR}/tools/toy/toy ./examples/basic.toy basic
 
+# delete build dir artifacts.
 clean:
 	@rm -rf ${BUILD_DIR}
+
+# requires sudo access.
+install: build
+	sudo cp ${BUILD_DIR}/tools/toy/Toy /usr/local/Toy
