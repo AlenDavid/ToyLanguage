@@ -17,4 +17,4 @@ compile: build
 	${BUILD_DIR}/tools/toy/toy ./examples/basic.toy basic
 
 clean:
-	@rm -rf src
+	@rm -rf ${BUILD_DIR}

@@ -15,12 +15,13 @@ G |== <DEFS>
 <ID> |== <TEXT>
 <VALUE> |== <E>
 <VALUE> |== """<TEXT>"""
-<BLOCK> |== "{" <DEFS> "}"";"
 
 <PARAMS> |== "(" ")"
 <PARAMS> |== "(" <PARAM> ")"
 <PARAM> |== <TEXT> ","
 <PARAM> |== <TEXT>
+
+<BLOCK> |== "{" <DEFS> "}"";"
 
 # controls
 <DEFS> |== <IF> <COND> <BLOCK> ";"
