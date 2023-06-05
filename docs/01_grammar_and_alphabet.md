@@ -26,6 +26,9 @@ G |== <DEFS>
 <DEFS> |== <IF> <COND> <BLOCK> ";"
 <IF> |== if
 
+<DEFS> |== <FOR> <COND> <BLOCK> ";"
+<IF> |== for
+
 <COND> |== <E> > <E>
 
 # expressions
