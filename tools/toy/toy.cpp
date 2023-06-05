@@ -48,7 +48,7 @@ int main(int argc, char **argv)
   checker.EnableDebug();
   checker.G();
 
-  if (checker.Errs.empty())
+  if (!checker.Errs.empty())
     std::cout << "\nErrors:\n";
 
   for (const auto &err : checker.Errs)
