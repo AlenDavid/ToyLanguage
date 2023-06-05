@@ -1,10 +1,10 @@
 #include <string>
-#include "../syntax_tokens/syntax_tokens.h"
+#include "../tokens/tokens.h"
 
 #ifndef TOY_LIB_SYNTAX_CHECKER_H
 #define TOY_LIB_SYNTAX_CHECKER_H
 
-namespace syntax
+namespace lexical
 {
   class SyntaxChecker
   {

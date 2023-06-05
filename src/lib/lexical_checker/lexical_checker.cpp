@@ -1,11 +1,11 @@
 #include <string>
 
-#include "./syntax_checker.h"
-#include "../syntax_tokens/syntax_tokens.h"
+#include "./lexical_checker.h"
+#include "../tokens/tokens.h"
 
 using namespace tokens;
 
-namespace syntax
+namespace lexical
 {
   SyntaxChecker::SyntaxChecker(std::string Code) : Code(std::move(Code)) {}
 

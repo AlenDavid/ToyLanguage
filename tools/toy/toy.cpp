@@ -24,10 +24,10 @@
 #include <fstream>
 
 #include "../../src/lib/input_parser/input_parser.h"
-#include "../../src/lib/syntax_checker/syntax_checker.h"
+#include "../../src/lib/lexical_checker/lexical_checker.h"
 
 using namespace tokens;
-using namespace syntax;
+using namespace lexical;
 
 int main(int argc, char **argv)
 {
