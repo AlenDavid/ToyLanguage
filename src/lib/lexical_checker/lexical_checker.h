@@ -10,7 +10,7 @@ namespace lexical
   {
   public:
     bool Debug = false;
-    int LastChar = ' ';
+    int CurrentChar = ' ';
     int CaretPlace = 0;
     int CurrentLine = 0;
     int CharCounter = 0;

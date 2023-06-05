@@ -35,13 +35,13 @@ namespace lexical
   Token SyntaxChecker::GetToken()
   {
     // Skip any whitespace.
-    while (isspace(LastChar))
-      LastChar = NextChar();
+    while (isspace(CurrentChar))
+      CurrentChar = NextChar();
 
-    if (ispunct(LastChar)) // [!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]
+    if (ispunct(CurrentChar)) // [!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]
     {
-      CurrentIdentifier = (char)LastChar;
-      LastChar = NextChar();
+      CurrentIdentifier = (char)CurrentChar;
+      CurrentChar = NextChar();
 
       if (CurrentIdentifier == "=")
       {
@@ -110,15 +110,15 @@ namespace lexical
       }
     }
 
-    if (isalpha(LastChar)) // [a-zA-Z][a-zA-Z0-9]*
+    if (isalpha(CurrentChar)) // [a-zA-Z][a-zA-Z0-9]*
     {
-      CurrentIdentifier = (char)LastChar;
-      LastChar = NextChar();
+      CurrentIdentifier = (char)CurrentChar;
+      CurrentChar = NextChar();
 
-      while (isalnum(LastChar))
+      while (isalnum(CurrentChar))
       {
-        CurrentIdentifier += (char)LastChar;
-        LastChar = NextChar();
+        CurrentIdentifier += (char)CurrentChar;
+        CurrentChar = NextChar();
       }
 
       if (CurrentIdentifier == "def")
@@ -151,20 +151,20 @@ namespace lexical
       return Token::tok_identifier;
     }
 
-    if (isdigit(LastChar))
+    if (isdigit(CurrentChar))
     { // Number: [0-9.]+
       std::string NumStr;
       bool AlreadyUsedDot = false;
       do
       {
-        if (!AlreadyUsedDot && (char)LastChar == '.')
+        if (!AlreadyUsedDot && (char)CurrentChar == '.')
         {
           AlreadyUsedDot = true;
         }
 
-        NumStr += (char)LastChar;
-        LastChar = NextChar();
-      } while (isdigit(LastChar) || (!AlreadyUsedDot && LastChar == '.'));
+        NumStr += (char)CurrentChar;
+        CurrentChar = NextChar();
+      } while (isdigit(CurrentChar) || (!AlreadyUsedDot && CurrentChar == '.'));
 
       CurrentNumericValue = strtod(NumStr.c_str(), nullptr);
 
@@ -173,14 +173,14 @@ namespace lexical
       return Token::tok_double;
     }
 
-    if (LastChar == '#')
+    if (CurrentChar == '#')
     {
       // Comment until end of line.
       do
-        LastChar = NextChar();
-      while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+        CurrentChar = NextChar();
+      while (CurrentChar != EOF && CurrentChar != '\n' && CurrentChar != '\r');
 
-      if (LastChar != EOF)
+      if (CurrentChar != EOF)
       {
         Token t = GetToken();
         Tokens.push_back(t);
@@ -189,15 +189,15 @@ namespace lexical
     }
 
     // Check for end of file.  Don't eat the EOF.
-    if (LastChar == EOF)
+    if (CurrentChar == EOF)
     {
       Tokens.push_back(Token::tok_eof);
       return Token::tok_eof;
     }
 
     // Otherwise, just return the character as its ascii value.
-    int ThisChar = LastChar;
-    LastChar = NextChar();
+    int ThisChar = CurrentChar;
+    CurrentChar = NextChar();
 
     Tokens.push_back((Token)ThisChar);
     return (Token)ThisChar;
