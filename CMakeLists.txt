@@ -186,8 +186,6 @@ llvm_map_components_to_libnames(LLVM_LIBS
   Support
   Demangle
 )
-# execute_process(COMMAND llvm-config --libs all
-#                 OUTPUT_VARIABLE LLVM_LIBS)
 
 add_subdirectory(src)
 add_subdirectory(tools)

@@ -1,11 +1,22 @@
 # lib library
 
+add_subdirectory(syntactic_analysis)
+add_subdirectory(input_parser)
+add_subdirectory(module_emmiter)
+add_subdirectory(lexical)
+add_subdirectory(tokens)
+
 add_library(Libs
   input_parser/input_parser.cpp
-  module_emmiter/module_emmiter.cpp
-  lexical/lexical.cpp
-  tokens/tokens.cpp
-  syntactic_analysis/syntactic_analysis.cpp
 )
 
 target_compile_definitions(Libs PUBLIC Libs)
+
+target_link_libraries(Libs
+  ${LLVM_LIBS}
+  SyntacticAnalysis
+  InputParser
+  ModuleEmmiter
+  Lexical
+  Tokens
+)
