@@ -16,13 +16,13 @@ namespace analysis
     _Debug = true;
   }
 
-  void SyntaxChecker::Debug(std::string message)
+  void SyntaxChecker::Debug(const std::string &message)
   {
     if (_Debug)
       std::cout << message << std::endl;
   }
 
-  void SyntaxChecker::Report(std::string expected)
+  void SyntaxChecker::Report(const std::string &expected)
   {
     std::ostringstream oss;
 
@@ -68,6 +68,60 @@ namespace analysis
     }
 
     return g;
+  }
+
+  // Syntax check for definitions.
+  bool SyntaxChecker::D()
+  {
+    Debug("D()");
+
+    // consume ID.
+    CurrentToken = Factory.NextToken();
+    Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
+
+    if (CurrentToken != Token::tok_identifier)
+    {
+      Report("name");
+      return false;
+    }
+
+    // consume next token.
+    CurrentToken = Factory.NextToken();
+    Debug("Token: " + From(CurrentToken));
+
+    // <DEF> <ID> = <E>
+    if (CurrentToken == Token::tok_equal)
+      return E();
+
+    // <DEF> <ID> <PARAMS> <BLOCK>
+    // <PARAMS> |== (<PARAM>)
+    if (CurrentToken == Token::tok_open_parenthesis)
+    {
+      // TODO: check parameters
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken != Token::tok_close_parenthesis)
+      {
+        Report(")");
+        return false;
+      }
+
+      // consume {
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken != Token::tok_open_curly)
+      {
+        Report("{");
+        return false;
+      }
+
+      return B();
+    }
+
+    Report("Unkown");
+    return false;
   }
 
   // For expressions
@@ -137,60 +191,6 @@ namespace analysis
       return true;
     }
 
-    return false;
-  }
-
-  // Syntax check for definitions.
-  bool SyntaxChecker::D()
-  {
-    Debug("D()");
-
-    // consume ID.
-    CurrentToken = Factory.NextToken();
-    Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
-
-    if (CurrentToken != Token::tok_identifier)
-    {
-      Report("name");
-      return false;
-    }
-
-    // consume next token.
-    CurrentToken = Factory.NextToken();
-    Debug("Token: " + From(CurrentToken));
-
-    // <DEF> <ID> = <E>
-    if (CurrentToken == Token::tok_equal)
-      return E();
-
-    // <DEF> <ID> <PARAMS> <BLOCK>
-    // <PARAMS> |== (<PARAM>)
-    if (CurrentToken == Token::tok_open_parenthesis)
-    {
-      // TODO: check parameters
-      CurrentToken = Factory.NextToken();
-      Debug("Token: " + From(CurrentToken));
-
-      if (CurrentToken != Token::tok_close_parenthesis)
-      {
-        Report(")");
-        return false;
-      }
-
-      // consume {
-      CurrentToken = Factory.NextToken();
-      Debug("Token: " + From(CurrentToken));
-
-      if (CurrentToken != Token::tok_open_curly)
-      {
-        Report("{");
-        return false;
-      }
-
-      return B();
-    }
-
-    Report("Unkown");
     return false;
   }
 

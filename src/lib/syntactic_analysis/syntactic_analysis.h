@@ -17,12 +17,14 @@ namespace analysis
 
     explicit SyntaxChecker(lexical::LexicalFactory &factory);
     void EnableDebug();
-    void Debug(std::string);
+
     bool B();
     bool D();
     bool E();
     bool G();
-    void Report(std::string);
+
+    void Debug(const std::string &);
+    void Report(const std::string &);
   };
 } // namespace analysis
 
