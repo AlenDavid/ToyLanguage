@@ -3,7 +3,7 @@
 add_library(Libs
   input_parser/input_parser.cpp
   module_emmiter/module_emmiter.cpp
-  lexical_checker/lexical_checker.cpp
+  lexical/lexical.cpp
 )
 
 target_compile_definitions(Libs PUBLIC Libs)

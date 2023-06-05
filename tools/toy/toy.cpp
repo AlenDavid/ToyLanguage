@@ -24,7 +24,7 @@
 #include <fstream>
 
 #include "../../src/lib/input_parser/input_parser.h"
-#include "../../src/lib/lexical_checker/lexical_checker.h"
+#include "../../src/lib/lexical/lexical.h"
 
 using namespace tokens;
 using namespace lexical;

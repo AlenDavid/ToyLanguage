@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 
-#include "./lexical_checker.h"
+#include "./lexical.h"
 #include "../tokens/tokens.h"
 
 using namespace tokens;
