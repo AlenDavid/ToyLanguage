@@ -8,14 +8,17 @@ namespace analysis
   class SyntaxChecker
   {
   public:
-    bool Debug = false;
+    bool _Debug = false;
     std::vector<std::string> Errs;
     lexical::LexicalFactory &Factory;
+    tokens::Token CurrentToken;
 
     explicit SyntaxChecker(lexical::LexicalFactory &factory);
     void EnableDebug();
+    void Debug(std::string);
+    bool E();
     void G();
-    void Report(std::string, tokens::Token);
+    void Report(std::string);
   };
 } // namespace analysis
 

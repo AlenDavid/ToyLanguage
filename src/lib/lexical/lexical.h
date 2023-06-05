@@ -27,7 +27,7 @@ namespace lexical
 
     void EnableDebug();
     int NextChar();
-    tokens::Token GetToken();
+    tokens::Token NextToken();
   };
 }
 #endif // TOY_LIB_LEXICAL_H

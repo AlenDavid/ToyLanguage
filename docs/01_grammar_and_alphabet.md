@@ -9,7 +9,7 @@ G |== <DEFS>
 <DEFS> |== <DEFS>";"<DEFS>
 <DEFS> |== <DEFS>";"
 <DEFS> |== <DEF> <ID> "=" <VALUE>";"
-<DEFS> |== <DEF> <ID> <PARAMS> <BLOCK>";"
+<DEFS> |== <DEF> <ID> <PARAMS> <BLOCK>
 
 <DEF> |== def
 <ID> |== <TEXT>
@@ -21,7 +21,8 @@ G |== <DEFS>
 <PARAM> |== <TEXT> ","
 <PARAM> |== <TEXT>
 
-<BLOCK> |== "{" <DEFS> "}"";"
+<BLOCK> |== "{" <DEFS> ";" <RETURN> <VALUE> ";" "}"
+<RETURN> |== return
 
 # controls
 <DEFS> |== <IF> <COND> <BLOCK> ";"

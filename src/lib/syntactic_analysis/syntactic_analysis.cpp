@@ -12,77 +12,182 @@ namespace analysis
 
   void SyntaxChecker::EnableDebug()
   {
-    Debug = true;
+    _Debug = true;
   }
 
-  void SyntaxChecker::Report(std::string expected, tokens::Token token)
+  void SyntaxChecker::Debug(std::string message)
+  {
+    if (_Debug)
+      std::cout << message << std::endl;
+  }
+
+  void SyntaxChecker::Report(std::string expected)
   {
     std::ostringstream oss;
 
     oss << "expected: " << expected << " got: ";
 
-    if (token == Token::tok_identifier || token == Token::tok_string)
+    if (CurrentToken == Token::tok_identifier || CurrentToken == Token::tok_string)
     {
       oss << Factory.CurrentIdentifier;
     }
-    else if (token == Token::tok_double || token == Token::tok_int)
+
+    else if (CurrentToken == Token::tok_double || CurrentToken == Token::tok_int)
     {
       oss << Factory.CurrentNumericValue;
     }
+
     else
     {
-      oss << tokens::From(token);
+      oss << tokens::From(CurrentToken);
     }
 
     oss << " at line " << Factory.CurrentLine + 1 << ", column " << Factory.CaretPlace + 1;
 
+    Debug(oss.str());
     Errs.emplace_back(oss.str());
     oss.clear();
   }
 
+  // For expressions
+  bool SyntaxChecker::E()
+  {
+    Debug("E()");
+    CurrentToken = Factory.NextToken();
+    Debug("Token: " + From(CurrentToken));
+
+    if (CurrentToken == Token::tok_open_parenthesis)
+    {
+      E();
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken != Token::tok_close_parenthesis)
+      {
+        Report(")");
+        return false;
+      }
+    }
+
+    if (CurrentToken == Token::tok_double)
+    {
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken == Token::tok_end)
+      {
+        return true;
+      }
+
+      if (CurrentToken == Token::tok_greater_than)
+      {
+        return E();
+      }
+
+      Report(";");
+      return false;
+    }
+
+    if (CurrentToken == Token::tok_string)
+    {
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
+
+      if (CurrentToken != Token::tok_end)
+      {
+        Report(";");
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  // For grammar checking
   void SyntaxChecker::G()
   {
-    for (auto token = Factory.GetToken(); token != Token::tok_eof; token = Factory.GetToken())
+    Debug("G()");
+
+    for (CurrentToken = Factory.NextToken(); CurrentToken != Token::tok_eof; CurrentToken = Factory.NextToken())
     {
-      if (token != Token::tok_def)
+      Debug("Token: " + From(CurrentToken));
+
+      // <BLOCK> |== "{" <DEFS> ";" <RETURN> <VALUE> ";" "}"
+      if (CurrentToken == Token::tok_open_curly)
       {
-        Report("def", token);
+        Debug("BEFORE G");
+        G();
+        Debug("AFTER G");
+
+        CurrentToken = Factory.NextToken();
+
+        if (CurrentToken != Token::tok_close_curly)
+        {
+          Report("}");
+        }
+
         break;
       }
 
-      token = Factory.GetToken();
-
-      if (token != Token::tok_identifier)
+      if (CurrentToken == Token::tok_return)
       {
-        Report("variable name", token);
+        auto e = E();
+
+        Debug("return " + std::to_string(Factory.CurrentNumericValue));
+
+        if (!e)
+        {
+          Report("expression");
+        }
+
         break;
       }
 
-      token = Factory.GetToken();
-
-      if (token != Token::tok_equal)
+      if (CurrentToken == Token::tok_def)
       {
-        Report("=", token);
-        break;
+        CurrentToken = Factory.NextToken();
+        Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
+
+        if (CurrentToken != Token::tok_identifier)
+        {
+          Report("name");
+          break;
+        }
+
+        CurrentToken = Factory.NextToken();
+        Debug("Token: " + From(CurrentToken));
+
+        // <DEF> <ID> = <E>
+        if (CurrentToken == Token::tok_equal)
+        {
+          if (!E())
+          {
+            Report("def");
+            break;
+          }
+        }
+
+        // <DEF> <ID> <PARAMS> <BLOCK>
+        // <PARAMS> |== (<PARAM>)
+        if (CurrentToken == Token::tok_open_parenthesis)
+        {
+          // TODO: check parameters
+          CurrentToken = Factory.NextToken();
+          Debug("Token: " + From(CurrentToken));
+
+          if (CurrentToken != Token::tok_close_parenthesis)
+          {
+            Report(")");
+            break;
+          }
+        }
+
+        if (CurrentToken == Token::tok_eof)
+        {
+          Report("code");
+          break;
+        }
       }
-
-      token = Factory.GetToken();
-
-      if (token != Token::tok_double)
-      {
-        Report("double", token);
-        break;
-      }
-
-      token = Factory.GetToken();
-
-      if (token != Token::tok_end)
-      {
-        Report("end", token);
-        break;
-      }
-
-      G();
     }
   }
 } // namespace analysis

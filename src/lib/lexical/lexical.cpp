@@ -32,7 +32,7 @@ namespace lexical
     return c;
   }
 
-  Token LexicalFactory::GetToken()
+  Token LexicalFactory::NextToken()
   {
     // Skip any whitespace.
     while (isspace(CurrentChar))
@@ -182,7 +182,7 @@ namespace lexical
 
       if (CurrentChar != EOF)
       {
-        Token t = GetToken();
+        Token t = NextToken();
         Tokens.push_back(t);
         return t;
       }

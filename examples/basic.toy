@@ -1,1 +1,4 @@
-def five = 5.0;
+def main() {
+  def anna = 5;
+  return 0;
+}

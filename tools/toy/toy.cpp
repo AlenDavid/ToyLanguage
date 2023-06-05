@@ -45,12 +45,20 @@ int main(int argc, char **argv)
   auto factory = LexicalFactory(code);
   auto checker = SyntaxChecker(factory);
 
+  checker.EnableDebug();
   checker.G();
 
   if (checker.Errs.size() > 0)
     std::cout << "\nErrors:\n";
 
   for (auto s : checker.Errs)
+  {
+    std::cout << s << std::endl;
+  }
+
+  std::cout << "\nIdentifiers: " << std::endl;
+
+  for (auto s : checker.Factory.Identifiers)
   {
     std::cout << s << std::endl;
   }
