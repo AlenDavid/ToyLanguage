@@ -25,4 +25,4 @@ clean:
 
 # requires sudo access.
 install: build
-	sudo cp ${BUILD_DIR}/tools/toy/Toy /usr/local/Toy
+	sudo cp ${BUILD_DIR}/tools/toy/Toy /usr/local/bin/toy
