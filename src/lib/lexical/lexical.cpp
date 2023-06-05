@@ -43,6 +43,12 @@ namespace lexical
       CurrentIdentifier = (char)CurrentChar;
       CurrentChar = NextChar();
 
+      if (CurrentIdentifier == "\"")
+      {
+        Tokens.push_back(Token::tok_string);
+        return Token::tok_string;
+      }
+
       if (CurrentIdentifier == "=")
       {
         Tokens.push_back(Token::tok_equal);

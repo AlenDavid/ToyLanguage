@@ -88,16 +88,30 @@ namespace analysis
       return false;
     }
 
+    // "[\w\W]+"
     if (CurrentToken == Token::tok_string)
     {
+      // consume text
       CurrentToken = Factory.NextToken();
       Debug("Token: " + From(CurrentToken));
 
+      // consume "
+      CurrentToken = Factory.NextToken();
+      if (CurrentToken != Token::tok_string)
+      {
+        Report("\"");
+        return false;
+      }
+
+      CurrentToken = Factory.NextToken();
+      Debug("Token: " + From(CurrentToken));
       if (CurrentToken != Token::tok_end)
       {
         Report(";");
         return false;
       }
+
+      return true;
     }
 
     return false;
