@@ -15,11 +15,26 @@ namespace analysis
     Debug = true;
   }
 
-  void SyntaxChecker::Report(std::string message)
+  void SyntaxChecker::Report(std::string expected, tokens::Token token)
   {
     std::ostringstream oss;
 
-    oss << message << " at line " << Factory.CurrentLine << ", column " << Factory.CaretPlace;
+    oss << "expected: " << expected << " got: ";
+
+    if (token == Token::tok_identifier || token == Token::tok_string)
+    {
+      oss << Factory.CurrentIdentifier;
+    }
+    else if (token == Token::tok_double || token == Token::tok_int)
+    {
+      oss << Factory.CurrentNumericValue;
+    }
+    else
+    {
+      oss << tokens::From(token);
+    }
+
+    oss << " at line " << Factory.CurrentLine << ", column " << Factory.CaretPlace;
 
     Errs.emplace_back(oss.str());
     oss.clear();
@@ -27,13 +42,12 @@ namespace analysis
 
   void SyntaxChecker::G()
   {
-    std::ostringstream oss;
     Token token;
 
     while (Token::tok_eof != (token = Factory.GetToken()))
     {
       if (token != Token::tok_def)
-        Report("expected: 'def', got: bananas");
+        Report("def", token);
 
       token = Factory.GetToken();
       if (token == Token::tok_identifier)

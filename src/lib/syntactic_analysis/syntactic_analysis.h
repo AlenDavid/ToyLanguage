@@ -15,7 +15,7 @@ namespace analysis
     explicit SyntaxChecker(lexical::LexicalFactory &factory);
     void EnableDebug();
     void G();
-    void Report(std::string);
+    void Report(std::string, tokens::Token);
   };
 } // namespace analysis
 

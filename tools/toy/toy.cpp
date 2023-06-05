@@ -47,15 +47,13 @@ int main(int argc, char **argv)
 
   checker.G();
 
-  std::cout << "Tokens:\n\n";
-  for (auto i : factory.Tokens)
+  if (checker.Errs.size() > 0)
+    std::cout << "\nErrors:\n";
+
+  for (auto s : checker.Errs)
   {
-    std::cout << (int)i << std::endl;
+    std::cout << s << std::endl;
   }
 
-  std::cout << "Identifiers:\n\n";
-  for (const std::string i : factory.Identifiers)
-  {
-    std::cout << i << std::endl;
-  }
+  return checker.Errs.size();
 }

@@ -4,6 +4,7 @@ add_library(Libs
   input_parser/input_parser.cpp
   module_emmiter/module_emmiter.cpp
   lexical/lexical.cpp
+  tokens/tokens.cpp
   syntactic_analysis/syntactic_analysis.cpp
 )
 

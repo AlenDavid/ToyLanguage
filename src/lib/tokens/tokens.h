@@ -1,5 +1,8 @@
-#ifndef TOY_LIB_SYNTAX_TOKENS_H
-#define TOY_LIB_SYNTAX_TOKENS_H
+#include <string>
+
+#ifndef TOY_LIB_TOKENS_H
+#define TOY_LIB_TOKENS_H
+
 namespace tokens
 {
   enum class Token
@@ -31,6 +34,8 @@ namespace tokens
     tok_for = -57,
     tok_greater_than = -58,
   };
+
+  std::string From(Token);
 }
 
-#endif
+#endif // TOY_LIB_TOKENS_H
