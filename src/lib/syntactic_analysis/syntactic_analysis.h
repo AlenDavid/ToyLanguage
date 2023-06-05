@@ -16,13 +16,14 @@ namespace analysis
     tokens::Token CurrentToken;
 
     explicit SyntaxChecker(lexical::LexicalFactory &factory);
-    void EnableDebug();
 
+    tokens::Token Next();
     bool B();
     bool D();
     bool E();
     bool G();
 
+    void EnableDebug();
     void Debug(const std::string &);
     void Report(const std::string &);
   };

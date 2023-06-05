@@ -11,6 +11,8 @@ namespace analysis
 {
   SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory) : Factory(factory) {}
 
+  Token SyntaxChecker::Next() { return (CurrentToken = Factory.NextToken()); }
+
   void SyntaxChecker::EnableDebug() { _Debug = true; }
 
   void SyntaxChecker::Debug(const std::string &message)
