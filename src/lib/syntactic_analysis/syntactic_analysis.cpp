@@ -11,16 +11,20 @@ namespace analysis
 {
   SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory) : Factory(factory) {}
 
+  // Consume next token from Factory and assign to CurrentToken.
   Token SyntaxChecker::Next() { return (CurrentToken = Factory.NextToken()); }
 
+  // Will enable logs from the analysis.
   void SyntaxChecker::EnableDebug() { _Debug = true; }
 
+  // Log message if Debug is true.
   void SyntaxChecker::Debug(const std::string &message)
   {
     if (_Debug)
       std::cout << message << std::endl;
   }
 
+  // Store analysis errors.
   void SyntaxChecker::Report(const std::string &expected)
   {
     std::ostringstream oss;
@@ -46,6 +50,7 @@ namespace analysis
 
     Debug(oss.str());
     Errs.emplace_back(oss.str());
+
     oss.clear();
   }
 } // namespace analysis

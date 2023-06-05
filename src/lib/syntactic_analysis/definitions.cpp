@@ -15,7 +15,7 @@ namespace analysis
     Debug("D()");
 
     // consume ID.
-    CurrentToken = Factory.NextToken();
+    Next();
     Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
 
     if (CurrentToken != Token::tok_identifier)
@@ -24,8 +24,7 @@ namespace analysis
       return false;
     }
 
-    // consume next token.
-    CurrentToken = Factory.NextToken();
+    Next();
     Debug("Token: " + From(CurrentToken));
 
     // <DEF> <ID> = <E>
@@ -37,7 +36,7 @@ namespace analysis
     if (CurrentToken == Token::tok_open_parenthesis)
     {
       // TODO: check parameters
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_close_parenthesis)
@@ -47,7 +46,7 @@ namespace analysis
       }
 
       // consume {
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_open_curly)

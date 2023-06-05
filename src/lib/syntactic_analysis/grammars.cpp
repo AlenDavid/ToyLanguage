@@ -14,7 +14,7 @@ namespace analysis
   {
     Debug("G()");
 
-    for (CurrentToken = Factory.NextToken(); CurrentToken != Token::tok_eof; CurrentToken = Factory.NextToken())
+    for (Next(); CurrentToken != Token::tok_eof; Next())
     {
       Debug("Token: " + From(CurrentToken));
 

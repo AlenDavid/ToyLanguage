@@ -17,7 +17,7 @@ namespace analysis
     // <DEFS>
     auto g = G();
 
-    CurrentToken = Factory.NextToken();
+    Next();
     Debug("Token: " + From(CurrentToken));
 
     if (CurrentToken != Token::tok_close_curly)

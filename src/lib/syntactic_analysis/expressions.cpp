@@ -14,13 +14,13 @@ namespace analysis
   bool SyntaxChecker::E()
   {
     Debug("E()");
-    CurrentToken = Factory.NextToken();
+    Next();
     Debug("Token: " + From(CurrentToken));
 
     if (CurrentToken == Token::tok_open_parenthesis)
     {
       E();
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_close_parenthesis)
@@ -32,7 +32,7 @@ namespace analysis
 
     if (CurrentToken == Token::tok_double)
     {
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken == Token::tok_end)
@@ -53,11 +53,11 @@ namespace analysis
     if (CurrentToken == Token::tok_string)
     {
       // consume text
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken) + " \"" + Factory.CurrentIdentifier + "\"");
 
       // consume "
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_string)
@@ -66,7 +66,7 @@ namespace analysis
         return false;
       }
 
-      CurrentToken = Factory.NextToken();
+      Next();
       Debug("Token: " + From(CurrentToken));
       if (CurrentToken != Token::tok_end)
       {
