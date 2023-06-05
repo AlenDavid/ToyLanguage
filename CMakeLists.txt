@@ -189,11 +189,5 @@ llvm_map_components_to_libnames(LLVM_LIBS
 # execute_process(COMMAND llvm-config --libs all
 #                 OUTPUT_VARIABLE LLVM_LIBS)
 
-add_subdirectory(src/lib)
-add_subdirectory(tools/toy)
-add_subdirectory(tools/example)
-
-include_directories("${CMAKE_CURRENT_LIST_DIR}")
-
-target_link_libraries(Toy ${LLVM_LIBS})
-target_link_libraries(Example ${LLVM_LIBS})
+add_subdirectory(src)
+add_subdirectory(tools)
