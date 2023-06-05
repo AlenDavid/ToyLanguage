@@ -8,13 +8,13 @@ using namespace tokens;
 
 namespace lexical
 {
-  SyntaxChecker::SyntaxChecker(std::string Code) : Code(std::move(Code)) {}
-  void SyntaxChecker::EnableDebug()
+  LexicalFactory::LexicalFactory(std::string Code) : Code(std::move(Code)) {}
+  void LexicalFactory::EnableDebug()
   {
     Debug = true;
   }
 
-  int SyntaxChecker::NextChar()
+  int LexicalFactory::NextChar()
   {
     if (Code.length() <= CharCounter)
       return EOF;
@@ -32,7 +32,7 @@ namespace lexical
     return c;
   }
 
-  Token SyntaxChecker::GetToken()
+  Token LexicalFactory::GetToken()
   {
     // Skip any whitespace.
     while (isspace(CurrentChar))

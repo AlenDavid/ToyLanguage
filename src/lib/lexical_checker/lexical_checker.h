@@ -6,7 +6,7 @@
 
 namespace lexical
 {
-  class SyntaxChecker
+  class LexicalFactory
   {
   public:
     bool Debug = false;
@@ -23,7 +23,7 @@ namespace lexical
     std::vector<tokens::Token> Tokens;
     std::vector<std::string> Identifiers;
 
-    explicit SyntaxChecker(std::string Code);
+    explicit LexicalFactory(std::string Code);
 
     void EnableDebug();
     int NextChar();

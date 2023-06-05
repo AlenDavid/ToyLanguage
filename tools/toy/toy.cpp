@@ -40,19 +40,19 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  auto parser = SyntaxChecker(code);
+  auto factory = LexicalFactory(code);
 
-  while (parser.GetToken() != Token::tok_eof)
+  while (factory.GetToken() != Token::tok_eof)
     ;
 
   std::cout << "Tokens:\n\n";
-  for (auto i : parser.Tokens)
+  for (auto i : factory.Tokens)
   {
     std::cout << (int)i << std::endl;
   }
 
   std::cout << "Identifiers:\n\n";
-  for (const std::string i : parser.Identifiers)
+  for (const std::string i : factory.Identifiers)
   {
     std::cout << i << std::endl;
   }
