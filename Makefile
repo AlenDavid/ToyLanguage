@@ -14,7 +14,7 @@ run_example: example
 	./main
 
 compile: build
-	${BUILD_DIR}/tools/toy/toy ./examples/hello.toy hello
+	${BUILD_DIR}/tools/toy/toy ./examples/basic.toy basic
 
 clean:
 	@rm -rf src
