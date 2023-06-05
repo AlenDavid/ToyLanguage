@@ -48,13 +48,13 @@ int main(int argc, char **argv)
   checker.EnableDebug();
   checker.G();
 
-  if (checker.Errs.size() > 0)
+  if (checker.Errs.empty())
     std::cout << "\nErrors:\n";
 
-  for (auto s : checker.Errs)
+  for (const auto &err : checker.Errs)
   {
-    std::cout << s << std::endl;
+    std::cout << err << std::endl;
   }
 
-  return checker.Errs.size();
+  return (int)checker.Errs.size();
 }
