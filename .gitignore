@@ -4,6 +4,9 @@
 !Readme.md
 !LICENSE
 
+!docs
+!docs/**
+
 !CmakeLists.txt
 !Makefile
 
