@@ -5,4 +5,3 @@ add_library(Libs
   module_emmiter/module_emmiter.cpp
   syntax_checker/syntax_checker.cpp
 )
-

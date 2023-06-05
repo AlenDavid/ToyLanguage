@@ -39,17 +39,17 @@ int main(int argc, char **argv)
 
   auto parser = SyntaxChecker(code);
 
-  while (parser.GetToken() != tok_eof)
+  while (parser.GetToken() != Token::tok_eof)
     ;
 
   std::cout << "Tokens:\n\n";
   for (auto i : parser.Tokens)
   {
-    std::cout << i << std::endl;
+    std::cout << (int)i << std::endl;
   }
 
   std::cout << "Identifiers:\n\n";
-  for (auto i : parser.Identifiers)
+  for (const std::string i : parser.Identifiers)
   {
     std::cout << i << std::endl;
   }
