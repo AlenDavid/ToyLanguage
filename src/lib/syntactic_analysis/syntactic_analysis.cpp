@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -55,7 +56,7 @@ namespace analysis
     Debug("B()");
 
     // <DEFS>
-    return G();
+    auto g = G();
 
     CurrentToken = Factory.NextToken();
     Debug("Token: " + From(CurrentToken));
@@ -65,6 +66,8 @@ namespace analysis
       Report(";");
       return false;
     }
+
+    return g;
   }
 
   // For expressions
@@ -203,7 +206,7 @@ namespace analysis
       if (CurrentToken == Token::tok_def && !D())
         return false;
 
-      if (CurrentToken == Token::tok_return)
+      if (std::find(ExpressionTokens.begin(), ExpressionTokens.end(), CurrentToken) != ExpressionTokens.end())
       {
         auto e = E();
 

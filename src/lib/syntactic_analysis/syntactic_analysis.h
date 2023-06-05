@@ -10,6 +10,8 @@ namespace analysis
   public:
     bool _Debug = false;
     std::vector<std::string> Errs;
+    std::vector<tokens::Token> ExpressionTokens = {tokens::Token::tok_identifier, tokens::Token::tok_return};
+
     lexical::LexicalFactory &Factory;
     tokens::Token CurrentToken;
 

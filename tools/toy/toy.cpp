@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   auto factory = LexicalFactory(code);
   auto checker = SyntaxChecker(factory);
 
-  // checker.EnableDebug();
+  checker.EnableDebug();
   checker.G();
 
   if (checker.Errs.size() > 0)
