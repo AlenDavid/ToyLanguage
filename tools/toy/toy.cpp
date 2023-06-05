@@ -25,7 +25,6 @@
 
 #include "../../src/lib/input_parser/input_parser.h"
 #include "../../src/lib/syntax_checker/syntax_checker.h"
-#include "../../src/lib/syntax_tokens/syntax_tokens.h"
 
 using namespace tokens;
 using namespace syntax;
