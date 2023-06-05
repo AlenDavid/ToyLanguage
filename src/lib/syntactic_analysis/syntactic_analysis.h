@@ -19,7 +19,7 @@ namespace analysis
     bool B();
     bool D();
     bool E();
-    void G();
+    bool G();
     void Report(std::string);
   };
 } // namespace analysis

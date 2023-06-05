@@ -52,38 +52,19 @@ namespace analysis
   // Syntax check for blocks of code.
   bool SyntaxChecker::B()
   {
+    Debug("B()");
+
     // <DEFS>
-    G();
+    return G();
 
-    if (CurrentToken == Token::tok_eof)
-    {
-      return true;
-    }
-
-    // <RETURN> <E>;
-    if (CurrentToken != Token::tok_return)
-    {
-      Report("return");
-      return false;
-    }
-
-    auto e = E();
-
-    Debug("return " + std::to_string(Factory.CurrentNumericValue));
-
-    if (!e)
-    {
-      Report("expression");
-      return false;
-    }
+    CurrentToken = Factory.NextToken();
+    Debug("Token: " + From(CurrentToken));
 
     if (CurrentToken != Token::tok_close_curly)
     {
-      Report("}");
+      Report(";");
       return false;
     }
-
-    return true;
   }
 
   // For expressions
@@ -211,7 +192,7 @@ namespace analysis
   }
 
   // For grammar checking
-  void SyntaxChecker::G()
+  bool SyntaxChecker::G()
   {
     Debug("G()");
 
@@ -220,7 +201,21 @@ namespace analysis
       Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken == Token::tok_def && !D())
-        break;
+        return false;
+
+      if (CurrentToken == Token::tok_return)
+      {
+        auto e = E();
+
+        if (!e)
+        {
+          Report("expression");
+        }
+
+        return e;
+      }
     }
+
+    return true;
   }
 } // namespace analysis
