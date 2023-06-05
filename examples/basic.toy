@@ -1,0 +1,11 @@
+def five = 5.0;
+
+def main = () {
+  def num = 12;
+
+  if num > five {
+    print("num is bigger than five");
+  }
+
+  return five;
+}
