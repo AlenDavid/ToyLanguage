@@ -34,7 +34,7 @@ namespace analysis
       oss << tokens::From(token);
     }
 
-    oss << " at line " << Factory.CurrentLine << ", column " << Factory.CaretPlace;
+    oss << " at line " << Factory.CurrentLine + 1 << ", column " << Factory.CaretPlace + 1;
 
     Errs.emplace_back(oss.str());
     oss.clear();
@@ -42,31 +42,47 @@ namespace analysis
 
   void SyntaxChecker::G()
   {
-    Token token;
-
-    while (Token::tok_eof != (token = Factory.GetToken()))
+    for (auto token = Factory.GetToken(); token != Token::tok_eof; token = Factory.GetToken())
     {
       if (token != Token::tok_def)
+      {
         Report("def", token);
+        break;
+      }
 
       token = Factory.GetToken();
-      if (token == Token::tok_identifier)
+
+      if (token != Token::tok_identifier)
       {
-        token = Factory.GetToken();
-        if (token == Token::tok_equal)
-        {
-          token = Factory.GetToken();
-          if (token == Token::tok_double)
-          {
-          }
-          else if (token == Token::tok_string)
-          {
-          }
-        }
-        else if (token == Token::tok_equal)
-        {
-        }
+        Report("variable name", token);
+        break;
       }
+
+      token = Factory.GetToken();
+
+      if (token != Token::tok_equal)
+      {
+        Report("=", token);
+        break;
+      }
+
+      token = Factory.GetToken();
+
+      if (token != Token::tok_double)
+      {
+        Report("double", token);
+        break;
+      }
+
+      token = Factory.GetToken();
+
+      if (token != Token::tok_end)
+      {
+        Report("end", token);
+        break;
+      }
+
+      G();
     }
   }
 } // namespace analysis
