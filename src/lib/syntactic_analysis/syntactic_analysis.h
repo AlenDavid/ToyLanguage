@@ -9,11 +9,13 @@ namespace analysis
   {
   public:
     bool Debug = false;
+    std::vector<std::string> Errs;
     lexical::LexicalFactory &Factory;
 
     explicit SyntaxChecker(lexical::LexicalFactory &factory);
     void EnableDebug();
     void G();
+    void Report(std::string);
   };
 } // namespace analysis
 
