@@ -1,14 +1,19 @@
 #include <string>
-#include "../tokens/tokens.h"
 
 #include "./syntactic_analysis.h"
 
 namespace analysis
 {
-  SyntaxChecker::SyntaxChecker() = default;
+  SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory) : Factory(factory) {}
 
   void SyntaxChecker::EnableDebug()
   {
     Debug = true;
+  }
+
+  void SyntaxChecker::G()
+  {
+    while (Factory.GetToken() != tokens::Token::tok_eof)
+      ;
   }
 } // namespace analysis

@@ -1,3 +1,5 @@
+#include "../lexical/lexical.h"
+
 #ifndef TOY_LIB_SYNTACTIC_ANALYSIS_H
 #define TOY_LIB_SYNTACTIC_ANALYSIS_H
 
@@ -7,9 +9,11 @@ namespace analysis
   {
   public:
     bool Debug = false;
+    lexical::LexicalFactory &Factory;
 
-    explicit SyntaxChecker();
+    explicit SyntaxChecker(lexical::LexicalFactory &factory);
     void EnableDebug();
+    void G();
   };
 } // namespace analysis
 

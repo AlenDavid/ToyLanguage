@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 {
   std::cout << "Toy Language compiler" << std::endl;
 
-  auto code = parse_args(argc, argv);
+  const auto code = parse_args(argc, argv);
 
   if (code == "")
   {
@@ -43,10 +43,9 @@ int main(int argc, char **argv)
   }
 
   auto factory = LexicalFactory(code);
-  auto checker = SyntaxChecker();
+  auto checker = SyntaxChecker(factory);
 
-  while (factory.GetToken() != Token::tok_eof)
-    ;
+  checker.G();
 
   std::cout << "Tokens:\n\n";
   for (auto i : factory.Tokens)
