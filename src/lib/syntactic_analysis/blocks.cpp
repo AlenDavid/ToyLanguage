@@ -12,19 +12,22 @@ namespace analysis
   // Syntax check for blocks of code.
   bool SyntaxChecker::B()
   {
+    // For debugging purposes.
+    NestLevel++;
     Debug("B()");
 
     // <DEFS>
     auto g = G();
 
     Next();
-    Debug("Token: " + From(CurrentToken));
 
     if (CurrentToken != Token::tok_close_curly)
     {
       Report(";");
       return false;
     }
+
+    NestLevel--;
 
     return g;
   }

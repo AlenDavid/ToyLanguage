@@ -12,7 +12,13 @@ namespace analysis
   SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory) : Factory(factory) {}
 
   // Consume next token from Factory and assign to CurrentToken.
-  Token SyntaxChecker::Next() { return (CurrentToken = Factory.NextToken()); }
+  Token SyntaxChecker::Next()
+  {
+    CurrentToken = Factory.NextToken();
+    Debug("[" + From(CurrentToken) + "]");
+
+    return CurrentToken;
+  }
 
   // Will enable logs from the analysis.
   void SyntaxChecker::EnableDebug() { _Debug = true; }
@@ -21,7 +27,11 @@ namespace analysis
   void SyntaxChecker::Debug(const std::string &message)
   {
     if (_Debug)
+    {
+      for (auto i = 0; i < NestLevel; i++)
+        std::cout << "  ";
       std::cout << message << std::endl;
+    }
   }
 
   // Store analysis errors.

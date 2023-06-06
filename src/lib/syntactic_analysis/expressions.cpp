@@ -13,19 +13,20 @@ namespace analysis
   // For expressions
   bool SyntaxChecker::E()
   {
+    NestLevel++;
     Debug("E()");
     Next();
-    Debug("Token: " + From(CurrentToken));
 
     if (CurrentToken == Token::tok_open_parenthesis)
     {
       E();
       Next();
-      Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_close_parenthesis)
       {
         Report(")");
+        NestLevel--;
+
         return false;
       }
     }
@@ -33,10 +34,10 @@ namespace analysis
     if (CurrentToken == Token::tok_double)
     {
       Next();
-      Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken == Token::tok_end)
       {
+        NestLevel--;
         return true;
       }
 
@@ -58,22 +59,25 @@ namespace analysis
 
       // consume "
       Next();
-      Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_string)
       {
         Report("\"");
+        NestLevel--;
         return false;
       }
 
       Next();
-      Debug("Token: " + From(CurrentToken));
+
       if (CurrentToken != Token::tok_end)
       {
         Report(";");
+        NestLevel--;
+        NestLevel--;
         return false;
       }
 
+      NestLevel--;
       return true;
     }
 

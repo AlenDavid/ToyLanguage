@@ -12,12 +12,11 @@ namespace analysis
   // For grammar checking
   bool SyntaxChecker::G()
   {
+    NestLevel++;
     Debug("G()");
 
     for (Next(); CurrentToken != Token::tok_eof; Next())
     {
-      Debug("Token: " + From(CurrentToken));
-
       if (CurrentToken == Token::tok_def && !D())
         return false;
 
@@ -33,6 +32,8 @@ namespace analysis
         return e;
       }
     }
+
+    NestLevel--;
 
     return true;
   }

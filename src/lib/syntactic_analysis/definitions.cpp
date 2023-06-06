@@ -12,6 +12,7 @@ namespace analysis
   // Syntax check for definitions.
   bool SyntaxChecker::D()
   {
+    NestLevel++;
     Debug("D()");
 
     // consume ID.
@@ -21,15 +22,19 @@ namespace analysis
     if (CurrentToken != Token::tok_identifier)
     {
       Report("name");
+      NestLevel++;
+
       return false;
     }
 
     Next();
-    Debug("Token: " + From(CurrentToken));
 
     // <DEF> <ID> = <E>
     if (CurrentToken == Token::tok_equal)
+    {
+      NestLevel--;
       return E();
+    }
 
     // <DEF> <ID> <PARAMS> <BLOCK>
     // <PARAMS> |== (<PARAM>)
@@ -37,28 +42,30 @@ namespace analysis
     {
       // TODO: check parameters
       Next();
-      Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_close_parenthesis)
       {
         Report(")");
+        NestLevel--;
         return false;
       }
 
       // consume {
       Next();
-      Debug("Token: " + From(CurrentToken));
 
       if (CurrentToken != Token::tok_open_curly)
       {
         Report("{");
+        NestLevel--;
         return false;
       }
 
+      NestLevel--;
       return B();
     }
 
     Report("Unkown");
+    NestLevel--;
     return false;
   }
 } // namespace analysis
