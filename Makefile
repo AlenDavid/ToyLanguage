@@ -22,6 +22,7 @@ compile: build
 # delete build dir artifacts.
 clean:
 	@rm -rf ${BUILD_DIR}
+	@rm output.o main
 
 # requires sudo access.
 install: build
