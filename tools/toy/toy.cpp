@@ -23,6 +23,7 @@
 #include <iostream>
 
 #include "../../src/lib/input_parser/input_parser.h"
+#include "../../src/lib/messages/messages.h"
 #include "../../src/lib/lexical/lexical.h"
 #include "../../src/lib/syntactic_analysis/syntactic_analysis.h"
 
@@ -36,39 +37,28 @@ int main(int argc, char **argv)
 
   if (argc <= 2)
   {
-    std::cout << "usage: 'toy <path_to_file.toy>' '<path_to_output>' [options]" << std::endl;
+    std::cout << Messages::USAGE << std::endl;
     return 0;
   }
 
+  // check for options.
   for (int i = 3; i < argc; i++)
   {
     if (std::strcmp(argv[i], "--help") == 0)
     {
-      std::cout << "Toy Language compiler\n"
-                << std::endl
-                << "usage: toy '<path_to_file.toy>' '<path_to_output>'"
-                << std::endl
-                << "example: toy ./main.toy main"
-                << std::endl
-                << "\t--help: print this message"
-                << std::endl
-                << "\t--debug: enable syntax logging"
-                << std::endl;
+      std::cout << Messages::USAGE << std::endl;
       return 0;
     }
 
-    if (std::strcmp(argv[i], "--debug") == 0)
-    {
-      std::cout << "debug mode enabled." << std::endl;
+    if (std::strcmp(argv[i], "--verbose") == 0)
       debugging = true;
-    }
   }
 
   const auto code = file_contents(argv[1]);
 
   if (code == "")
   {
-    std::cout << "code not found." << std::endl;
+    std::cout << Messages::USAGE << std::endl;
     return 1;
   }
 

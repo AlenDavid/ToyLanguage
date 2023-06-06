@@ -1,0 +1,5 @@
+# Library: Messages
+
+add_library(Messages
+  messages.cpp
+)
