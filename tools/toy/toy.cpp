@@ -35,6 +35,20 @@ int main(int argc, char **argv)
 {
   bool debugging = false;
 
+  auto Context = llvm::LLVMContext();
+  auto Module = std::make_unique<llvm::Module>("toy language", Context);
+  auto Builder = llvm::IRBuilder(Context);
+  llvm::ExitOnError ExitOnErr;
+
+  llvm::InitializeNativeTarget();
+  llvm::InitializeNativeTargetAsmPrinter();
+  llvm::InitializeNativeTargetAsmParser();
+  llvm::InitializeAllTargetInfos();
+  llvm::InitializeAllTargets();
+  llvm::InitializeAllTargetMCs();
+  llvm::InitializeAllAsmParsers();
+  llvm::InitializeAllAsmPrinters();
+
   if (argc <= 2)
   {
     std::cout << Messages::USAGE << std::endl;
