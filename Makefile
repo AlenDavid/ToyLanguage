@@ -17,7 +17,7 @@ run_example: example
 	./main
 
 compile: build
-	${BUILD_DIR}/tools/toy/toy ./examples/basic.toy basic
+	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy basic --debug
 
 # delete build dir artifacts.
 clean:

@@ -34,7 +34,13 @@ int main(int argc, char **argv)
 {
   bool debugging = false;
 
-  for (int i = 0; i < argc; i++)
+  if (argc <= 2)
+  {
+    std::cout << "usage: 'toy <path_to_file.toy>' '<path_to_output>' [options]" << std::endl;
+    return 0;
+  }
+
+  for (int i = 3; i < argc; i++)
   {
     if (std::strcmp(argv[i], "--help") == 0)
     {
@@ -50,20 +56,28 @@ int main(int argc, char **argv)
                 << std::endl;
       return 0;
     }
+
     if (std::strcmp(argv[i], "--debug") == 0)
+    {
+      std::cout << "debug mode enabled." << std::endl;
       debugging = true;
+    }
   }
 
-  const auto code = parse_args(argc, argv);
+  const auto code = file_contents(argv[1]);
 
   if (code == "")
+  {
+    std::cout << "code not found." << std::endl;
     return 1;
+  }
 
   auto factory = LexicalFactory(code);
   auto checker = SyntaxChecker(factory);
 
   if (debugging)
     checker.EnableDebug();
+
   checker.G();
 
   if (!checker.Errs.empty())
