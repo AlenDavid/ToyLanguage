@@ -36,11 +36,23 @@ int main(int argc, char **argv)
 
   for (int i = 0; i < argc; i++)
   {
-    if (std::strcmp(argv[i], "--debug"))
+    if (std::strcmp(argv[i], "--help") == 0)
+    {
+      std::cout << "Toy Language compiler\n"
+                << std::endl
+                << "usage: toy '<path_to_file.toy>' '<path_to_output>'"
+                << std::endl
+                << "example: toy ./main.toy main"
+                << std::endl
+                << "\t--help: print this message"
+                << std::endl
+                << "\t--debug: enable syntax logging"
+                << std::endl;
+      return 0;
+    }
+    if (std::strcmp(argv[i], "--debug") == 0)
       debugging = true;
   }
-
-  std::cout << "Toy Language compiler" << std::endl;
 
   const auto code = parse_args(argc, argv);
 
