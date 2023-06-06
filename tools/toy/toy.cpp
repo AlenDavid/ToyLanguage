@@ -21,7 +21,6 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
 
 #include "../../src/lib/input_parser/input_parser.h"
 #include "../../src/lib/lexical/lexical.h"
@@ -33,19 +32,26 @@ using namespace analysis;
 
 int main(int argc, char **argv)
 {
+  bool debugging = false;
+
+  for (int i = 0; i < argc; i++)
+  {
+    if (std::strcmp(argv[i], "--debug"))
+      debugging = true;
+  }
+
   std::cout << "Toy Language compiler" << std::endl;
 
   const auto code = parse_args(argc, argv);
 
   if (code == "")
-  {
     return 1;
-  }
 
   auto factory = LexicalFactory(code);
   auto checker = SyntaxChecker(factory);
 
-  checker.EnableDebug();
+  if (debugging)
+    checker.EnableDebug();
   checker.G();
 
   if (!checker.Errs.empty())
