@@ -1,5 +1,6 @@
 #include "llvm/IR/Module.h"
 #include "llvm/Support/Error.h"
+#include "llvm/Support/raw_ostream.h"
 #include <algorithm>
 #include <iostream>
 #include <memory>
@@ -60,14 +61,17 @@ void SyntaxChecker::Report(const std::string &expected) {
       << Factory.CaretPlace + 1;
 
   Debug(oss.str());
+  llvm::errs() << oss.str();
+
   Errs.emplace_back(oss.str());
 
   oss.clear();
 }
 
 llvm::Expected<std::unique_ptr<SyntaxChecker>> SyntaxChecker::Codegen() {
-  auto fn = nodes::FunctionAST("main", std::vector<std::string>());
-  fn.codegen(Module.get());
+  if (!G()) {
+    llvm::errs() << "couldn't generate code.";
+  }
 
   return nullptr;
 }
