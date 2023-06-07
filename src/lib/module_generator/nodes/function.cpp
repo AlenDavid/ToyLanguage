@@ -10,7 +10,7 @@ namespace nodes {
 FunctionAST::FunctionAST(const std::string &Name, std::vector<std::string> Args)
     : Name(Name), Args(std::move(Args)) {}
 
-const std::string &FunctionAST::getName() { return Name; }
+const std::string &FunctionAST::getName() const { return Name; }
 
 llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
   auto Builder = llvm::IRBuilder(Module->getContext());

@@ -13,6 +13,6 @@ public:
   FunctionAST(const std::string &Name, std::vector<std::string> Args);
 
   llvm::Function *codegen(llvm::Module *);
-  const std::string &getName();
+  const std::string &getName() const;
 };
 } // namespace nodes
