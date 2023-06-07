@@ -21,7 +21,7 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
       llvm::Type::getInt32Ty(Module->getContext()), Empty, false);
 
   llvm::Function *TheFunction = llvm::Function::Create(
-      FT, llvm::Function::ExternalLinkage, "main", *Module);
+      FT, llvm::Function::ExternalLinkage, getName(), *Module);
 
   llvm::BasicBlock *BB =
       llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
@@ -29,7 +29,7 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
   Builder.SetInsertPoint(BB);
 
   if (llvm::Value *RetVal = llvm::ConstantInt::get(
-          llvm::Type::getInt32Ty(Module->getContext()), 27)) {
+          llvm::Type::getInt32Ty(Module->getContext()), 5)) {
 
     // Finish off the function.
     Builder.CreateRet(RetVal);
