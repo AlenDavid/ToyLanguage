@@ -23,8 +23,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "../../src/lib/input_parser/input_parser.h"
-#include "../../src/lib/module_emmiter/module_emmiter.h"
+#include "lib/input_parser/input_parser.h"
+#include "lib/module_emmiter/module_emmiter.h"
 
 int main(int argc,  char** argv)
 {

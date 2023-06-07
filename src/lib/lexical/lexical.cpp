@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "./lexical.h"
-#include "../tokens/tokens.h"
+#include "lib/tokens/tokens.h"
 
 using namespace tokens;
 

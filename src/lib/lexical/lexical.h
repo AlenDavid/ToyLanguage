@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include "../tokens/tokens.h"
+#include "lib/tokens/tokens.h"
 
 #pragma once
 namespace lexical

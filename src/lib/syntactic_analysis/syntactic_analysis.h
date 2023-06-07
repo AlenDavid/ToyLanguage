@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "../lexical/lexical.h"
+#include "lib/lexical/lexical.h"
 
 #pragma once
 namespace analysis
