@@ -26,6 +26,108 @@ int LexicalFactory::NextChar() {
   return c;
 }
 
+Token LexicalFactory::punctTokens() {
+  CurrentIdentifier = (char)CurrentChar;
+  CurrentChar = NextChar();
+
+  if (CurrentIdentifier == "\"") {
+    Tokens.push_back(Token::tok_string);
+    return Token::tok_string;
+  }
+
+  if (CurrentIdentifier == "=") {
+    Tokens.push_back(Token::tok_equal);
+    return Token::tok_equal;
+  }
+
+  if (CurrentIdentifier == ">") {
+    Tokens.push_back(Token::tok_greater_than);
+    return Token::tok_greater_than;
+  }
+
+  if (CurrentIdentifier == "+") {
+    Tokens.push_back(Token::tok_plus);
+    return Token::tok_plus;
+  }
+
+  if (CurrentIdentifier == "-") {
+    Tokens.push_back(Token::tok_minus);
+    return Token::tok_minus;
+  }
+
+  if (CurrentIdentifier == "*") {
+    Tokens.push_back(Token::tok_times);
+    return Token::tok_times;
+  }
+
+  if (CurrentIdentifier == "/") {
+    Tokens.push_back(Token::tok_divider);
+    return Token::tok_divider;
+  }
+
+  if (CurrentIdentifier == "{") {
+    Tokens.push_back(Token::tok_open_curly);
+    return Token::tok_open_curly;
+  }
+
+  if (CurrentIdentifier == "}") {
+    Tokens.push_back(Token::tok_close_curly);
+    return Token::tok_close_curly;
+  }
+
+  if (CurrentIdentifier == "(") {
+    Tokens.push_back(Token::tok_open_parenthesis);
+    return Token::tok_open_parenthesis;
+  }
+
+  if (CurrentIdentifier == ")") {
+    Tokens.push_back(Token::tok_close_parenthesis);
+    return Token::tok_close_parenthesis;
+  }
+
+  if (CurrentIdentifier == ";") {
+    Tokens.push_back(Token::tok_end);
+    return Token::tok_end;
+  }
+
+  return Token::no_token;
+}
+
+Token LexicalFactory::alphaTokens() {
+  CurrentIdentifier = (char)CurrentChar;
+  CurrentChar = NextChar();
+
+  while (isalnum(CurrentChar)) {
+    CurrentIdentifier += (char)CurrentChar;
+    CurrentChar = NextChar();
+  }
+
+  if (CurrentIdentifier == "def") {
+    Tokens.push_back(Token::tok_def);
+    return Token::tok_def;
+  }
+
+  if (CurrentIdentifier == "if") {
+    Tokens.push_back(Token::tok_if);
+    return Token::tok_if;
+  }
+
+  if (CurrentIdentifier == "for") {
+    Tokens.push_back(Token::tok_for);
+    return Token::tok_for;
+  }
+
+  if (CurrentIdentifier == "return") {
+    Tokens.push_back(Token::tok_return);
+    return Token::tok_return;
+  }
+
+  Tokens.push_back(Token::tok_identifier);
+  Identifiers.push_back(CurrentIdentifier);
+
+  return Token::tok_identifier;
+}
+
 Token LexicalFactory::NextToken() {
   // Skip any whitespace.
   while (isspace(CurrentChar))
@@ -34,104 +136,14 @@ Token LexicalFactory::NextToken() {
   if (ispunct(CurrentChar) &&
       CurrentChar != '#') // [!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]
   {
-    CurrentIdentifier = (char)CurrentChar;
-    CurrentChar = NextChar();
-
-    if (CurrentIdentifier == "\"") {
-      Tokens.push_back(Token::tok_string);
-      return Token::tok_string;
-    }
-
-    if (CurrentIdentifier == "=") {
-      Tokens.push_back(Token::tok_equal);
-      return Token::tok_equal;
-    }
-
-    if (CurrentIdentifier == ">") {
-      Tokens.push_back(Token::tok_greater_than);
-      return Token::tok_greater_than;
-    }
-
-    if (CurrentIdentifier == "+") {
-      Tokens.push_back(Token::tok_plus);
-      return Token::tok_plus;
-    }
-
-    if (CurrentIdentifier == "-") {
-      Tokens.push_back(Token::tok_minus);
-      return Token::tok_minus;
-    }
-
-    if (CurrentIdentifier == "*") {
-      Tokens.push_back(Token::tok_times);
-      return Token::tok_times;
-    }
-
-    if (CurrentIdentifier == "/") {
-      Tokens.push_back(Token::tok_divider);
-      return Token::tok_divider;
-    }
-
-    if (CurrentIdentifier == "{") {
-      Tokens.push_back(Token::tok_open_curly);
-      return Token::tok_open_curly;
-    }
-
-    if (CurrentIdentifier == "}") {
-      Tokens.push_back(Token::tok_close_curly);
-      return Token::tok_close_curly;
-    }
-
-    if (CurrentIdentifier == "(") {
-      Tokens.push_back(Token::tok_open_parenthesis);
-      return Token::tok_open_parenthesis;
-    }
-
-    if (CurrentIdentifier == ")") {
-      Tokens.push_back(Token::tok_close_parenthesis);
-      return Token::tok_close_parenthesis;
-    }
-
-    if (CurrentIdentifier == ";") {
-      Tokens.push_back(Token::tok_end);
-      return Token::tok_end;
-    }
+    auto t = punctTokens();
+    if (t != tokens::Token::no_token)
+      return t;
   }
 
   if (isalpha(CurrentChar)) // [a-zA-Z][a-zA-Z0-9]*
   {
-    CurrentIdentifier = (char)CurrentChar;
-    CurrentChar = NextChar();
-
-    while (isalnum(CurrentChar)) {
-      CurrentIdentifier += (char)CurrentChar;
-      CurrentChar = NextChar();
-    }
-
-    if (CurrentIdentifier == "def") {
-      Tokens.push_back(Token::tok_def);
-      return Token::tok_def;
-    }
-
-    if (CurrentIdentifier == "if") {
-      Tokens.push_back(Token::tok_if);
-      return Token::tok_if;
-    }
-
-    if (CurrentIdentifier == "for") {
-      Tokens.push_back(Token::tok_for);
-      return Token::tok_for;
-    }
-
-    if (CurrentIdentifier == "return") {
-      Tokens.push_back(Token::tok_return);
-      return Token::tok_return;
-    }
-
-    Tokens.push_back(Token::tok_identifier);
-    Identifiers.push_back(CurrentIdentifier);
-
-    return Token::tok_identifier;
+    return alphaTokens();
   }
 
   if (isdigit(CurrentChar)) { // Number: [0-9.]+

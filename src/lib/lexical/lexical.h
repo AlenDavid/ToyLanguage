@@ -6,7 +6,8 @@
 namespace lexical {
 class LexicalFactory {
 private:
-  tokens::Token _NextToken();
+  tokens::Token punctTokens();
+  tokens::Token alphaTokens();
 
 public:
   bool Debug = false;
