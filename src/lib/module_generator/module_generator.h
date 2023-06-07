@@ -6,12 +6,12 @@
 
 namespace generators {
 class ModuleGenerator {
-public:
   llvm::LLVMContext Context = llvm::LLVMContext();
+
+public:
   std::unique_ptr<llvm::Module> Module;
 
-  ModuleGenerator()
-      : Module(std::make_unique<llvm::Module>("toy language", Context)) {}
+  ModuleGenerator();
 
   void Generate();
 };

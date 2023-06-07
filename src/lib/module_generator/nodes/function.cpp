@@ -13,30 +13,28 @@ FunctionAST::FunctionAST(const std::string &Name, std::vector<std::string> Args)
 const std::string &FunctionAST::getName() { return Name; }
 
 llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
-
-  auto Context = llvm::LLVMContext();
-  auto Builder = llvm::IRBuilder(Context);
+  auto Builder = llvm::IRBuilder(Module->getContext());
 
   std::vector<llvm::Type *> Empty(0);
 
-  llvm::FunctionType *FT =
-      llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
+  llvm::FunctionType *FT = llvm::FunctionType::get(
+      llvm::Type::getInt32Ty(Module->getContext()), Empty, false);
 
-  llvm::Function *TheFunction =
-      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, Name, Module);
+  llvm::Function *TheFunction = llvm::Function::Create(
+      FT, llvm::Function::ExternalLinkage, "main", *Module);
 
   llvm::BasicBlock *BB =
-      llvm::BasicBlock::Create(Context, "entry", TheFunction);
+      llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
 
   Builder.SetInsertPoint(BB);
 
-  if (llvm::Value *RetVal =
-          llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 27)) {
+  if (llvm::Value *RetVal = llvm::ConstantInt::get(
+          llvm::Type::getInt32Ty(Module->getContext()), 27)) {
 
     // Finish off the function.
     Builder.CreateRet(RetVal);
-
-    return TheFunction;
   }
+
+  return TheFunction;
 }
 } // namespace nodes
