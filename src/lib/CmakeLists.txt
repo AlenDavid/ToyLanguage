@@ -188,6 +188,7 @@ target_link_libraries(
   SyntacticAnalysis
   ${LLVM_LIBS}
   InputParser
+  ModuleGenerator
   ModuleEmmiter
   Lexical
   Tokens

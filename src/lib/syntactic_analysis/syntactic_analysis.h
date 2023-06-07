@@ -6,13 +6,14 @@
 #pragma once
 namespace analysis {
 class SyntaxChecker {
+  const std::vector<tokens::Token> ExpressionTokens = {
+      tokens::Token::tok_identifier, tokens::Token::tok_return};
+
 public:
   int NestLevel = 0;
   bool _Debug = false;
 
   std::vector<std::string> Errs;
-  std::vector<tokens::Token> ExpressionTokens = {tokens::Token::tok_identifier,
-                                                 tokens::Token::tok_return};
 
   lexical::LexicalFactory &Factory;
   tokens::Token CurrentToken;

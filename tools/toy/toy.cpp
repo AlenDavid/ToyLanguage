@@ -25,28 +25,17 @@
 #include "lib/input_parser/input_parser.h"
 #include "lib/lexical/lexical.h"
 #include "lib/messages/messages.h"
+#include "lib/module_emmiter/module_emmiter.h"
+#include "lib/module_generator/module_generator.h"
 #include "lib/syntactic_analysis/syntactic_analysis.h"
 
-using namespace tokens;
-using namespace lexical;
 using namespace analysis;
+using namespace generators;
+using namespace lexical;
+using namespace tokens;
 
 int main(int argc, char **argv) {
   bool debugging = false;
-
-  auto Context = llvm::LLVMContext();
-  auto Module = std::make_unique<llvm::Module>("toy language", Context);
-  auto Builder = llvm::IRBuilder(Context);
-  llvm::ExitOnError ExitOnErr;
-
-  llvm::InitializeNativeTarget();
-  llvm::InitializeNativeTargetAsmPrinter();
-  llvm::InitializeNativeTargetAsmParser();
-  llvm::InitializeAllTargetInfos();
-  llvm::InitializeAllTargets();
-  llvm::InitializeAllTargetMCs();
-  llvm::InitializeAllAsmParsers();
-  llvm::InitializeAllAsmPrinters();
 
   if (argc <= 2) {
     std::cout << Messages::USAGE << std::endl;
@@ -71,13 +60,29 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  llvm::InitializeNativeTarget();
+  llvm::InitializeNativeTargetAsmPrinter();
+  llvm::InitializeNativeTargetAsmParser();
+  llvm::InitializeAllTargetInfos();
+  llvm::InitializeAllTargets();
+  llvm::InitializeAllTargetMCs();
+  llvm::InitializeAllAsmParsers();
+  llvm::InitializeAllAsmPrinters();
+
   auto factory = LexicalFactory(code);
   auto checker = SyntaxChecker(factory);
+  auto generator = ModuleGenerator();
 
   if (debugging)
     checker.EnableDebug();
 
   checker.G();
+  if (checker.Errs.empty()) {
+    std::cout << "Compiling code..." << std::endl;
+    generator.Generate();
+
+    run_pass_on_module(generator.Module.get(), "output.o");
+  }
 
   if (!checker.Errs.empty())
     std::cout << "\nErrors:\n";
