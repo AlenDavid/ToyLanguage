@@ -5,12 +5,12 @@
 
 #pragma once
 namespace nodes {
-class PrototypeAST {
+class FunctionAST {
   std::string Name;
   std::vector<std::string> Args;
 
 public:
-  PrototypeAST(const std::string &Name, std::vector<std::string> Args);
+  FunctionAST(const std::string &Name, std::vector<std::string> Args);
 
   llvm::Function *codegen(llvm::Module *);
   const std::string &getName();
