@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
   checker.G();
   if (checker.Errs.empty()) {
     std::cout << "Compiling code..." << std::endl;
-    generator.Generate();
+    generator.codegen();
 
     run_pass_on_module(generator.Module.get(), "output.o");
   }

@@ -16,7 +16,7 @@ namespace generators {
 ModuleGenerator::ModuleGenerator()
     : Module(std::make_unique<llvm::Module>("toy language", Context)) {}
 
-void ModuleGenerator::Generate() {
+void ModuleGenerator::codegen() {
   auto fn = nodes::FunctionAST("main", std::vector<std::string>());
   fn.codegen(Module.get());
 }

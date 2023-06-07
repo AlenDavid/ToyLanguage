@@ -13,6 +13,6 @@ public:
 
   ModuleGenerator();
 
-  void Generate();
+  void codegen();
 };
 } // namespace generators
