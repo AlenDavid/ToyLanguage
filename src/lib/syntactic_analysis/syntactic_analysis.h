@@ -1,3 +1,6 @@
+#include <string>
+#include <vector>
+
 #include "../lexical/lexical.h"
 
 #pragma once
@@ -8,6 +11,7 @@ namespace analysis
   public:
     int NestLevel = 0;
     bool _Debug = false;
+
     std::vector<std::string> Errs;
     std::vector<tokens::Token> ExpressionTokens = {tokens::Token::tok_identifier, tokens::Token::tok_return};
 

@@ -22,10 +22,10 @@
 #include <string>
 #include <iostream>
 
-#include "../../src/lib/input_parser/input_parser.h"
-#include "../../src/lib/messages/messages.h"
-#include "../../src/lib/lexical/lexical.h"
-#include "../../src/lib/syntactic_analysis/syntactic_analysis.h"
+#include "lib/input_parser/input_parser.h"
+#include "lib/messages/messages.h"
+#include "lib/lexical/lexical.h"
+#include "lib/syntactic_analysis/syntactic_analysis.h"
 
 using namespace tokens;
 using namespace lexical;
