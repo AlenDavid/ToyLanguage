@@ -1,31 +1,32 @@
+#include "lib/tokens/tokens.h"
 #include <string>
 #include <vector>
-#include "lib/tokens/tokens.h"
 
 #pragma once
-namespace lexical
-{
-  class LexicalFactory
-  {
-  public:
-    bool Debug = false;
-    int CurrentChar = ' ';
-    int CaretPlace = 0;
-    int CurrentLine = 0;
-    int CharCounter = 0;
+namespace lexical {
+class LexicalFactory {
+private:
+  tokens::Token _NextToken();
 
-    std::string CurrentIdentifier;
-    double CurrentNumericValue;
+public:
+  bool Debug = false;
+  int CurrentChar = ' ';
+  int CaretPlace = 0;
+  int CurrentLine = 0;
+  int CharCounter = 0;
 
-    const std::string Code;
+  std::string CurrentIdentifier;
+  double CurrentNumericValue;
 
-    std::vector<tokens::Token> Tokens;
-    std::vector<std::string> Identifiers;
+  const std::string Code;
 
-    explicit LexicalFactory(std::string Code);
+  std::vector<tokens::Token> Tokens;
+  std::vector<std::string> Identifiers;
 
-    void EnableDebug();
-    int NextChar();
-    tokens::Token NextToken();
-  };
-}
+  explicit LexicalFactory(std::string Code);
+
+  void EnableDebug();
+  int NextChar();
+  tokens::Token NextToken();
+};
+} // namespace lexical
