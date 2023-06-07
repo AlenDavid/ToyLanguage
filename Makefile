@@ -16,6 +16,11 @@ run_example: example
 	clang++ output.o -o main
 	./main
 
+# to be removed in the future.
+run_compiled: compile
+	clang++ output.o -o main
+	./main
+
 compile: build
 	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy basic --verbose
 

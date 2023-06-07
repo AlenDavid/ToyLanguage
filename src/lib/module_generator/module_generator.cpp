@@ -9,10 +9,8 @@
 #include <memory>
 
 namespace generators {
-
 void ModuleGenerator::Generate() {
   auto Builder = llvm::IRBuilder(Context);
-  llvm::ExitOnError ExitOnErr;
 
   std::vector<llvm::Type *> Empty(0);
   llvm::FunctionType *FT =
@@ -27,6 +25,7 @@ void ModuleGenerator::Generate() {
 
   if (llvm::Value *RetVal =
           llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 27)) {
+
     // Finish off the function.
     Builder.CreateRet(RetVal);
   }
