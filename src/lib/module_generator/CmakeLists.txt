@@ -5,3 +5,5 @@ add_subdirectory(nodes)
 add_library(ModuleGenerator
 module_generator.cpp
 )
+
+target_link_libraries(ModuleGenerator Nodes)

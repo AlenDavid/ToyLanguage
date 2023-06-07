@@ -24,6 +24,9 @@ run_compiled: compile
 compile: build
 	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy basic --verbose
 
+playground: build
+	${BUILD_DIR}/tools/playground/Playground
+
 # delete build dir artifacts.
 clean:
 	@rm -rf ${BUILD_DIR}
