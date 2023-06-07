@@ -7,12 +7,6 @@ add_subdirectory(module_emmiter)
 add_subdirectory(lexical)
 add_subdirectory(tokens)
 
-add_library(Libs
-  input_parser/input_parser.cpp
-)
-
-target_compile_definitions(Libs PUBLIC Libs)
-
 llvm_map_components_to_libnames(LLVM_LIBS
   XRay
   LibDriver
@@ -189,9 +183,9 @@ llvm_map_components_to_libnames(LLVM_LIBS
   Demangle
 )
 
-target_link_libraries(Libs
-  ${LLVM_LIBS}
+target_link_libraries(
   SyntacticAnalysis
+  ${LLVM_LIBS}
   InputParser
   ModuleEmmiter
   Lexical
