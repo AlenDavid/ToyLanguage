@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 
-#include "./syntactic_analysis.h"
+#include "syntactic_analysis.h"
 
 using namespace tokens;
 

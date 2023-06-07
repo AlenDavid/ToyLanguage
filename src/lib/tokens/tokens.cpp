@@ -1,6 +1,6 @@
 #include <string>
 
-#include "./tokens.h"
+#include "tokens.h"
 
 namespace tokens
 {
