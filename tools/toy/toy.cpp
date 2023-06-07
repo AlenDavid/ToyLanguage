@@ -1,3 +1,6 @@
+#include <iostream>
+#include <string>
+
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/IR/BasicBlock.h"
@@ -19,20 +22,16 @@
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Host.h"
 
-#include <string>
-#include <iostream>
-
 #include "lib/input_parser/input_parser.h"
-#include "lib/messages/messages.h"
 #include "lib/lexical/lexical.h"
+#include "lib/messages/messages.h"
 #include "lib/syntactic_analysis/syntactic_analysis.h"
 
 using namespace tokens;
 using namespace lexical;
 using namespace analysis;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   bool debugging = false;
 
   auto Context = llvm::LLVMContext();
@@ -49,17 +48,14 @@ int main(int argc, char **argv)
   llvm::InitializeAllAsmParsers();
   llvm::InitializeAllAsmPrinters();
 
-  if (argc <= 2)
-  {
+  if (argc <= 2) {
     std::cout << Messages::USAGE << std::endl;
     return 0;
   }
 
   // check for options.
-  for (int i = 3; i < argc; i++)
-  {
-    if (std::strcmp(argv[i], "--help") == 0)
-    {
+  for (int i = 3; i < argc; i++) {
+    if (std::strcmp(argv[i], "--help") == 0) {
       std::cout << Messages::USAGE << std::endl;
       return 0;
     }
@@ -70,8 +66,7 @@ int main(int argc, char **argv)
 
   const auto code = file_contents(argv[1]);
 
-  if (code == "")
-  {
+  if (code == "") {
     std::cout << Messages::USAGE << std::endl;
     return 1;
   }
@@ -87,8 +82,7 @@ int main(int argc, char **argv)
   if (!checker.Errs.empty())
     std::cout << "\nErrors:\n";
 
-  for (const auto &err : checker.Errs)
-  {
+  for (const auto &err : checker.Errs) {
     std::cout << err << std::endl;
   }
 
