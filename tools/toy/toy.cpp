@@ -26,11 +26,9 @@
 #include "lib/lexical/lexical.h"
 #include "lib/messages/messages.h"
 #include "lib/module_emmiter/module_emmiter.h"
-#include "lib/module_generator/module_generator.h"
 #include "lib/syntactic_analysis/syntactic_analysis.h"
 
 using namespace analysis;
-using namespace generators;
 using namespace lexical;
 using namespace tokens;
 
@@ -70,26 +68,26 @@ int main(int argc, char **argv) {
   llvm::InitializeAllAsmPrinters();
 
   auto factory = LexicalFactory(code);
-  auto checker = SyntaxChecker(factory);
-  auto generator = ModuleGenerator();
+  auto syntax = SyntaxChecker(factory);
+  llvm::ExitOnError ExitOnError;
 
   if (debugging)
-    checker.EnableDebug();
+    syntax.EnableDebug();
 
-  checker.G();
-  if (checker.Errs.empty()) {
+  ExitOnError(syntax.Codegen());
+
+  if (syntax.Errs.empty()) {
     std::cout << "Compiling code..." << std::endl;
-    generator.codegen();
 
-    run_pass_on_module(generator.Module.get(), "output.o");
+    run_pass_on_module(syntax.Module.get(), argv[2]);
   }
 
-  if (!checker.Errs.empty())
+  if (!syntax.Errs.empty())
     std::cout << "\nErrors:\n";
 
-  for (const auto &err : checker.Errs) {
+  for (const auto &err : syntax.Errs) {
     std::cout << err << std::endl;
   }
 
-  return (int)checker.Errs.size();
+  return (int)syntax.Errs.size();
 }

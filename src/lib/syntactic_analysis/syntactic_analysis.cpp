@@ -1,15 +1,20 @@
+#include "llvm/IR/Module.h"
+#include "llvm/Support/Error.h"
 #include <algorithm>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 
+#include "lib/code_generator/function.h"
 #include "syntactic_analysis.h"
 
 using namespace tokens;
 
 namespace analysis {
 SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory)
-    : Factory(factory) {}
+    : Module(std::make_unique<llvm::Module>("toy language", Context)),
+      Factory(factory) {}
 
 // Consume next token from Factory and assign to CurrentToken.
 Token SyntaxChecker::Next() {
@@ -58,5 +63,12 @@ void SyntaxChecker::Report(const std::string &expected) {
   Errs.emplace_back(oss.str());
 
   oss.clear();
+}
+
+llvm::Expected<std::unique_ptr<SyntaxChecker>> SyntaxChecker::Codegen() {
+  auto fn = nodes::FunctionAST("main", std::vector<std::string>());
+  fn.codegen(Module.get());
+
+  return nullptr;
 }
 } // namespace analysis

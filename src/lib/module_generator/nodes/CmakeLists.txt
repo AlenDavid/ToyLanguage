@@ -1,6 +1,0 @@
-# Library: Nodes
-
-add_library(Nodes
-  function.cpp
-  number.cpp
-)

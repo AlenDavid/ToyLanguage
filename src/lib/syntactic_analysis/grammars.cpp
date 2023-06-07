@@ -17,7 +17,7 @@ bool SyntaxChecker::G() {
     if (CurrentToken == Token::tok_def && !D())
       return false;
 
-    // tok_identifier | tok_return
+    // if either tok_identifier | tok_return we parse expr.
     if (std::find(ExpressionTokens.begin(), ExpressionTokens.end(),
                   CurrentToken) != ExpressionTokens.end()) {
       auto e = E();
