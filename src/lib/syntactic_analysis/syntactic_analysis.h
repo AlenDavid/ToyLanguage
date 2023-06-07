@@ -8,10 +8,10 @@
 #pragma once
 namespace analysis {
 class SyntaxChecker {
+public:
   const std::vector<tokens::Token> ExpressionTokens = {
       tokens::Token::tok_identifier, tokens::Token::tok_return};
 
-public:
   llvm::LLVMContext Context = llvm::LLVMContext();
 
   std::unique_ptr<llvm::Module> Module;
