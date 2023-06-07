@@ -36,9 +36,12 @@ bool SyntaxChecker::D() {
   // <DEF> <ID> <PARAMS> <BLOCK>
   // <PARAMS> |== (<PARAM>)
   if (CurrentToken == Token::tok_open_parenthesis) {
+    auto fnName = Factory.CurrentIdentifier;
+    auto fnArgs = std::vector<std::string>();
 
-    // TODO: check parameters
-    Next();
+    while (Token::tok_identifier == Next()) {
+      fnArgs.push_back(Factory.CurrentIdentifier);
+    }
 
     if (CurrentToken != Token::tok_close_parenthesis) {
       Report(")");
