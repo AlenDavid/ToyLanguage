@@ -19,18 +19,20 @@
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Host.h"
 
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 #include "lib/input_parser/input_parser.h"
 #include "lib/module_emmiter/module_emmiter.h"
 
-int main(int argc,  char** argv)
-{
+int main(int argc, char **argv) {
   std::cout << "Toy Language compiler" << std::endl;
 
   auto Context = llvm::LLVMContext();
+  auto Context2 = llvm::LLVMContext();
+  auto Context3 = llvm::LLVMContext();
+
   auto Module = std::make_unique<llvm::Module>("toy language", Context);
   auto Builder = llvm::IRBuilder(Context);
   llvm::ExitOnError ExitOnErr;
@@ -48,13 +50,15 @@ int main(int argc,  char** argv)
   llvm::FunctionType *FT =
       llvm::FunctionType::get(llvm::Type::getInt32Ty(Context), Empty, false);
 
-  llvm::Function *TheFunction =
-      llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", *Module.get());
-  llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "entry", TheFunction);
+  llvm::Function *TheFunction = llvm::Function::Create(
+      FT, llvm::Function::ExternalLinkage, "main", *Module.get());
+  llvm::BasicBlock *BB =
+      llvm::BasicBlock::Create(Context2, "entry", TheFunction);
 
   Builder.SetInsertPoint(BB);
 
-  if (llvm::Value *RetVal = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 27)) {
+  if (llvm::Value *RetVal =
+          llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context3), 27)) {
     // Finish off the function.
     Builder.CreateRet(RetVal);
   }
