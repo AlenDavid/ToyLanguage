@@ -1,0 +1,7 @@
+# Library: ModuleGenerator
+
+add_subdirectory(nodes)
+
+add_library(ModuleGenerator
+module_generator.cpp
+)

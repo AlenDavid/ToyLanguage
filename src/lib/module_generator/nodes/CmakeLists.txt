@@ -1,0 +1,5 @@
+# Library: Nodes
+
+add_library(Nodes
+  value.cpp
+)
