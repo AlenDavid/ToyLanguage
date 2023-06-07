@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(ToyLanguage)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 
 include_directories(/usr/local/include)

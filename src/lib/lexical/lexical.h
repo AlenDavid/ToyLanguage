@@ -1,9 +1,7 @@
 #include <string>
 #include "../tokens/tokens.h"
 
-#ifndef TOY_LIB_LEXICAL_H
-#define TOY_LIB_LEXICAL_H
-
+#pragma once
 namespace lexical
 {
   class LexicalFactory
@@ -30,4 +28,3 @@ namespace lexical
     tokens::Token NextToken();
   };
 }
-#endif // TOY_LIB_LEXICAL_H
