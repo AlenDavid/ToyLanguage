@@ -9,7 +9,7 @@ using namespace tokens;
 
 namespace analysis {
 // Syntax check for blocks of code.
-bool SyntaxChecker::B() {
+llvm::Value *SyntaxChecker::B() {
   // For debugging purposes.
   NestLevel++;
   Debug("B()");
@@ -25,7 +25,7 @@ bool SyntaxChecker::B() {
 
   if (CurrentToken != Token::tok_close_curly) {
     Report(";");
-    return false;
+    return nullptr;
   }
 
   NestLevel--;

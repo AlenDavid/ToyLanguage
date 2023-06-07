@@ -10,7 +10,7 @@ using namespace tokens;
 
 namespace analysis {
 // Syntax check for definitions.
-bool SyntaxChecker::D() {
+llvm::Value *SyntaxChecker::D() {
   NestLevel++;
   Debug("D()");
 
@@ -22,7 +22,7 @@ bool SyntaxChecker::D() {
     Report("name");
     NestLevel++;
 
-    return false;
+    return nullptr;
   }
 
   Next();
@@ -46,24 +46,38 @@ bool SyntaxChecker::D() {
     if (CurrentToken != Token::tok_close_parenthesis) {
       Report(")");
       NestLevel--;
-      return false;
+      return nullptr;
     }
 
-    // consume {
-    Next();
-
-    if (CurrentToken != Token::tok_open_curly) {
+    if (Next() != Token::tok_open_curly) {
       Report("{");
       NestLevel--;
-      return false;
+      return nullptr;
     }
 
-    NestLevel--;
-    return B();
+    auto block = B();
+
+    if (Next() != Token::tok_return) {
+      Report("return");
+      NestLevel--;
+      return nullptr;
+    }
+
+    // consume <E>
+    auto e = E();
+
+    if (Next() != Token::tok_end) {
+      Report("end");
+      NestLevel--;
+      return nullptr;
+    }
+
+    auto fn = nodes::FunctionAST(fnName, fnArgs, block, e);
+    return fn.codegen(Module.get());
   }
 
   Report("Unkown");
   NestLevel--;
-  return false;
+  return nullptr;
 }
 } // namespace analysis

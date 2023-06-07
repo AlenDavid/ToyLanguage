@@ -9,13 +9,13 @@ using namespace tokens;
 
 namespace analysis {
 // For grammar checking
-bool SyntaxChecker::G() {
+llvm::Value *SyntaxChecker::G() {
   NestLevel++;
   Debug("G()");
 
   for (Next(); CurrentToken != Token::tok_eof; Next()) {
     if (CurrentToken == Token::tok_def && !D())
-      return false;
+      return nullptr;
 
     // if either tok_identifier | tok_return we parse expr.
     if (std::find(ExpressionTokens.begin(), ExpressionTokens.end(),
@@ -32,6 +32,6 @@ bool SyntaxChecker::G() {
 
   NestLevel--;
 
-  return true;
+  return nullptr;
 }
 } // namespace analysis

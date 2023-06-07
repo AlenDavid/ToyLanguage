@@ -3,6 +3,7 @@
 
 #include "lib/lexical/lexical.h"
 #include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Value.h"
 #include "llvm/Support/Error.h"
 
 #pragma once
@@ -27,10 +28,10 @@ public:
   explicit SyntaxChecker(lexical::LexicalFactory &factory);
 
   tokens::Token Next();
-  bool B();
-  bool D();
-  bool E();
-  bool G();
+  llvm::Value *B();
+  llvm::Value *D();
+  llvm::Value *E();
+  llvm::Value *G();
 
   llvm::Expected<std::unique_ptr<SyntaxChecker>> Codegen();
 
