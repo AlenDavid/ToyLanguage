@@ -16,11 +16,10 @@ std::unique_ptr<int> consume_and_return(int *pint) {
 
 int main() {
   auto c = std::make_unique<int>(5);
-  std::cout << "c is: " << std::to_string(*c) << std::endl;
-
+  std::cout << "c is: " << std::to_string(*c) << " address: " << c << std::endl;
   auto d = consume_and_return(c.get());
 
-  std::cout << "c is: " << std::to_string(*c) << std::endl;
+  std::cout << "c is: " << std::to_string(*c) << " address: " << c << std::endl;
   std::cout << "d is: " << std::to_string(*d) << std::endl;
   return 0;
 }
