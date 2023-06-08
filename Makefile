@@ -1,5 +1,6 @@
 SRC_DIR=.
 BUILD_DIR=./build
+TARGET=output.o
 
 build: source
 	make -C ${BUILD_DIR}
@@ -18,11 +19,11 @@ run_example: example
 
 # to be removed in the future.
 run_compiled: compile
-	clang++ output.o -o main
+	clang++ ${TARGET} -o main
 	./main
 
 compile: build
-	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy basic --verbose
+	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy ${TARGET} --verbose
 
 playground: build
 	${BUILD_DIR}/tools/playground/Playground

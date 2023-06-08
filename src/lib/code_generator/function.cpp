@@ -26,11 +26,11 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
 
   // eat identifier
   llvm::Function *TheFunction = llvm::Function::Create(
-      FT, llvm::Function::ExternalLinkage, getName(), *Module);
+      FT, llvm::Function::ExternalLinkage, "main", *Module);
 
   // eat {
   llvm::BasicBlock *BB =
-      llvm::BasicBlock::Create(Module->getContext(), "block", TheFunction);
+      llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
 
   // eat G()
   Builder.SetInsertPoint(BB);
