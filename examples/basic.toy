@@ -2,7 +2,6 @@ def main() {
   def five = 5;
   def magic() {
     return 1;
-    return 2;
   }
 
   return 0;
