@@ -1,7 +1,11 @@
+# LLVM will generate this as a module.
+
+# This will become a fn.
 def two() {
   return 2;
 }
 
+# This will become a fn.
 def main() {
   def a = 1;
   def b = 2;

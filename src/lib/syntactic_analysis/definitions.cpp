@@ -75,7 +75,8 @@ llvm::Value *SyntaxChecker::D() {
 
     Builder->SetInsertPoint(BB);
 
-    auto block = B();
+    // Block can be null for the sake of just a return exp.
+    B();
 
     if (CurrentToken != tokens::Token::tok_return) {
       Report("return");
@@ -88,7 +89,6 @@ llvm::Value *SyntaxChecker::D() {
     if (!e) {
       Report("expression");
       NestLevel--;
-      ;
       return nullptr;
     }
 
@@ -105,7 +105,9 @@ llvm::Value *SyntaxChecker::D() {
     }
 
     NestLevel--;
-    return Builder->CreateRet(e);
+    Builder->CreateRet(e);
+
+    return TheFunction;
   }
 
   Report("Unkown");

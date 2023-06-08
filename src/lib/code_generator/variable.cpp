@@ -23,17 +23,20 @@ llvm::Value *VariableAST::codegen(llvm::IRBuilder<> *Builder) {
   if (!Value || !Builder)
     return nullptr;
 
-  errs() << "ctx!\n";
-  auto &ctx = Builder->getContext();
+  auto *A = Builder->CreateAlloca(Value->getType(), nullptr, Name);
 
-  errs() << "A\n";
-  auto *A = Builder->CreateAlloca(Type::getInt32Ty(ctx), nullptr, "a");
+  if (!A) {
+    errs() << "could't allocate " << Name << '\n';
+    return nullptr;
+  }
 
-  errs() << "L\n";
-  auto *L = ConstantInt::get(Type::getInt32Ty(ctx), 41);
-  errs() << "STORES\n";
+  auto store = Builder->CreateStore(Value, A, false);
 
-  return Builder->CreateStore(L, A, false);
-  return Value;
+  if (!store) {
+    errs() << "could't store " << Name << '\n';
+    return nullptr;
+  }
+
+  return store;
 }
 } // namespace nodes
