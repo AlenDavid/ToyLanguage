@@ -33,7 +33,7 @@ void SyntaxChecker::EnableDebug() { _Debug = true; }
 void SyntaxChecker::Debug(const std::string &message) const {
   if (_Debug) {
     for (auto i = 0; i < NestLevel; i++)
-      std::cout << "  ";
+      llvm::dbgs() << "  ";
     llvm::dbgs() << message << "\n";
   }
 }

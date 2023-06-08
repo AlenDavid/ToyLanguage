@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+using namespace llvm;
+
 namespace nodes {
 FunctionAST::FunctionAST(const std::string &Name, std::vector<std::string> Args,
                          llvm::Value *Block, llvm::Value *ReturnValue)
