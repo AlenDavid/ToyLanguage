@@ -12,8 +12,10 @@ namespace analysis {
 llvm::Value *SyntaxChecker::G() {
   if (CurrentToken == Token::tok_def) {
     auto d = D();
-    if (!d)
+    if (!d) {
       Report("def");
+      return nullptr;
+    }
 
     return d;
   }
