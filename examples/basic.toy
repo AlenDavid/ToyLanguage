@@ -1,5 +1,10 @@
+def two() {
+  return 2;
+}
+
 def main() {
-  def five = 5;
+  def a = 1;
+  def b = 2;
 
   return 0;
 }

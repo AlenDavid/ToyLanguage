@@ -1,25 +1,31 @@
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
 #include <iostream>
 #include <memory>
 #include <string>
 
-std::unique_ptr<int> dup(int *v) {
-  auto n = *v * 2;
-
-  return std::make_unique<int>(n);
-}
-
-std::unique_ptr<int> consume_and_return(int *pint) {
-  std::cout << "pint is: " << std::to_string(*pint) << std::endl;
-
-  return dup(pint);
-}
+using namespace llvm;
 
 int main() {
-  auto c = std::make_unique<int>(5);
-  std::cout << "c is: " << std::to_string(*c) << " address: " << c << std::endl;
-  auto d = consume_and_return(c.get());
+  auto ctx = llvm::LLVMContext();
 
-  std::cout << "c is: " << std::to_string(*c) << " address: " << c << std::endl;
-  std::cout << "d is: " << std::to_string(*d) << std::endl;
+  llvm::Module Module("playground", ctx);
+  IRBuilder<> Builder(ctx);
+
+  std::vector<llvm::Type *> Empty(0);
+
+  llvm::FunctionType *FT =
+      llvm::FunctionType::get(llvm::Type::getInt32Ty(ctx), Empty, false);
+
+  llvm::Function *TheFunction = llvm::Function::Create(
+      FT, llvm::Function::ExternalLinkage, "__entry", Module);
+
+  llvm::BasicBlock *BB = llvm::BasicBlock::Create(ctx, "entry", TheFunction);
+
+  Builder.SetInsertPoint(BB);
+
   return 0;
 }
