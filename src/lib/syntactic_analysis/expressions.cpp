@@ -39,7 +39,6 @@ llvm::Value *SyntaxChecker::E() {
 
     if (CurrentToken == Token::tok_end) {
       NestLevel--;
-      Debug("value is: " + std::to_string(value));
       return llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), value);
     }
 
