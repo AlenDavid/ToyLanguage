@@ -17,7 +17,8 @@ public:
   int CharCounter = 0;
 
   std::string CurrentIdentifier;
-  double CurrentNumericValue;
+  double CurrentFloatValue;
+  int CurrentIntValue;
 
   const std::string Code;
 

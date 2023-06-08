@@ -48,10 +48,11 @@ void SyntaxChecker::Report(const std::string &expected) {
     oss << Factory.CurrentIdentifier;
   }
 
-  else if (CurrentToken == Token::tok_double ||
-           CurrentToken == Token::tok_int) {
-    oss << Factory.CurrentNumericValue;
-  }
+  if (CurrentToken == Token::tok_double)
+    oss << Factory.CurrentFloatValue;
+
+  if (CurrentToken == Token::tok_int)
+    oss << Factory.CurrentIntValue;
 
   else {
     oss << tokens::From(CurrentToken);

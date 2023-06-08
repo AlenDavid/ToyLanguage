@@ -158,7 +158,8 @@ Token LexicalFactory::NextToken() {
       CurrentChar = NextChar();
     } while (isdigit(CurrentChar) || (!AlreadyUsedDot && CurrentChar == '.'));
 
-    CurrentNumericValue = strtod(NumStr.c_str(), nullptr);
+    CurrentFloatValue = strtod(NumStr.c_str(), nullptr);
+    CurrentIntValue = std::stoi(NumStr.c_str());
 
     Identifiers.push_back(NumStr);
     Tokens.push_back(Token::tok_double);

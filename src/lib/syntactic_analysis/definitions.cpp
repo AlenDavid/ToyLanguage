@@ -16,6 +16,7 @@ llvm::Value *SyntaxChecker::D() {
   // consume ID.
   Next();
   Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
+  auto name = Factory.CurrentIdentifier;
 
   if (CurrentToken != Token::tok_identifier) {
     Report("name");
@@ -35,7 +36,6 @@ llvm::Value *SyntaxChecker::D() {
   // <DEF> <ID> <PARAMS> <BLOCK>
   // <PARAMS> |== (<PARAM>)
   if (CurrentToken == Token::tok_open_parenthesis) {
-    auto fnName = Factory.CurrentIdentifier;
     auto fnArgs = std::vector<std::string>();
 
     while (Token::tok_identifier == Next()) {
@@ -56,7 +56,30 @@ llvm::Value *SyntaxChecker::D() {
 
     auto block = B();
 
-    auto fn = nodes::FunctionAST(fnName, fnArgs, block, nullptr);
+    if (CurrentToken != tokens::Token::tok_return) {
+      Report("return");
+      return nullptr;
+    }
+    auto e = E();
+
+    if (!e) {
+      Report("expression");
+      return nullptr;
+    }
+
+    if (CurrentToken != Token::tok_end) {
+      Report("end");
+      return nullptr;
+    }
+
+    if (Next() != Token::tok_close_curly) {
+      Report("}");
+      return nullptr;
+    }
+
+    NestLevel--;
+
+    auto fn = nodes::FunctionAST(name, fnArgs, block, e);
     return fn.codegen(Module.get());
   }
 

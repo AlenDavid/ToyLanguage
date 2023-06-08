@@ -4,6 +4,7 @@
 #include <string>
 
 #include "syntactic_analysis.h"
+#include "llvm/IR/Value.h"
 
 using namespace tokens;
 
@@ -12,20 +13,11 @@ namespace analysis {
 llvm::Value *SyntaxChecker::B() {
   // For debugging purposes.
   NestLevel++;
-  Next();
 
   // TODO: <DEFS>
-  auto g = G();
-  while (nullptr != (g = G()))
-    ;
+  while (Next() == tokens::Token::tok_def)
+    G();
 
-  if (Next() != Token::tok_close_curly) {
-    Report("}");
-    return nullptr;
-  }
-
-  NestLevel--;
-
-  return g;
+  return nullptr;
 }
 } // namespace analysis

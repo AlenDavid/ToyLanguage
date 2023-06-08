@@ -33,12 +33,14 @@ llvm::Value *SyntaxChecker::E() {
   }
 
   if (CurrentToken == Token::tok_double) {
-    auto value = Factory.CurrentNumericValue;
+    auto value = Factory.CurrentIntValue;
+
     Next();
 
     if (CurrentToken == Token::tok_end) {
       NestLevel--;
-      return llvm::ConstantFP::get(llvm::Type::getDoubleTy(Context), value);
+      Debug("value is: " + std::to_string(value));
+      return llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), value);
     }
 
     if (CurrentToken == Token::tok_greater_than) {

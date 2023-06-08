@@ -18,22 +18,6 @@ llvm::Value *SyntaxChecker::G() {
     return d;
   }
 
-  if (CurrentToken == tokens::Token::tok_return) {
-    auto e = E();
-
-    if (!e) {
-      Report("expression");
-      return nullptr;
-    }
-
-    if (CurrentToken != Token::tok_end) {
-      Report("end");
-      return nullptr;
-    }
-
-    return e;
-  }
-
   return nullptr;
 }
 } // namespace analysis

@@ -3,6 +3,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Value.h"
+#include <iostream>
 #include <llvm/IR/Function.h>
 #include <string>
 #include <vector>
@@ -26,7 +27,7 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
 
   // eat identifier
   llvm::Function *TheFunction = llvm::Function::Create(
-      FT, llvm::Function::ExternalLinkage, "main", *Module);
+      FT, llvm::Function::ExternalLinkage, getName(), *Module);
 
   // eat {
   llvm::BasicBlock *BB =
@@ -35,13 +36,7 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
   // eat G()
   Builder.SetInsertPoint(BB);
 
-  // eat return
-  if (llvm::Value *RetVal = llvm::ConstantInt::get(
-          llvm::Type::getInt32Ty(Module->getContext()), 5)) {
-
-    // Finish off the function.
-    Builder.CreateRet(RetVal);
-  }
+  Builder.CreateRet(ReturnValue);
 
   return TheFunction;
 }
