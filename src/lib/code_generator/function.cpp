@@ -24,15 +24,12 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module,
   llvm::FunctionType *FT = llvm::FunctionType::get(
       llvm::Type::getInt32Ty(Module->getContext()), Empty, false);
 
-  // eat identifier
   llvm::Function *TheFunction = llvm::Function::Create(
       FT, llvm::Function::ExternalLinkage, getName(), *Module);
 
-  // eat {
   llvm::BasicBlock *BB =
       llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
 
-  // eat G()
   Builder->SetInsertPoint(BB);
 
   Builder->CreateRet(ReturnValue);
