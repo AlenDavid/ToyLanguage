@@ -1,4 +1,5 @@
 #include "llvm/IR/Module.h"
+#include "llvm/Support/Debug.h"
 #include "llvm/Support/Error.h"
 #include "llvm/Support/raw_ostream.h"
 #include <algorithm>
@@ -15,7 +16,7 @@ using namespace tokens;
 namespace analysis {
 SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory)
     : Module(std::make_unique<llvm::Module>("toy language", Context)),
-      Factory(factory) {}
+      Builder(std::make_unique<llvm::IRBuilder<>>(Context)), Factory(factory) {}
 
 // Consume next token from Factory and assign to CurrentToken.
 Token SyntaxChecker::Next() {
@@ -33,7 +34,7 @@ void SyntaxChecker::Debug(const std::string &message) const {
   if (_Debug) {
     for (auto i = 0; i < NestLevel; i++)
       std::cout << "  ";
-    std::cout << message << std::endl;
+    llvm::dbgs() << message << "\n";
   }
 }
 
@@ -59,11 +60,9 @@ void SyntaxChecker::Report(const std::string &expected) {
   }
 
   oss << " at line " << Factory.CurrentLine + 1 << ", column "
-      << Factory.CaretPlace + 1 << std::endl;
+      << Factory.CaretPlace + 1;
 
-  Debug(oss.str());
-  llvm::errs() << oss.str();
-
+  llvm::errs() << oss.str() << "\n";
   Errs.emplace_back(oss.str());
 
   oss.clear();

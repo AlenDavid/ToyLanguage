@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "lib/lexical/lexical.h"
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Error.h"
@@ -13,6 +14,7 @@ public:
   llvm::LLVMContext Context = llvm::LLVMContext();
 
   std::unique_ptr<llvm::Module> Module;
+  std::unique_ptr<llvm::IRBuilder<>> Builder;
 
   int NestLevel = 0;
   bool _Debug = false;

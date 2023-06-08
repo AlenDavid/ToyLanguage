@@ -80,7 +80,7 @@ llvm::Value *SyntaxChecker::D() {
     NestLevel--;
 
     auto fn = nodes::FunctionAST(name, fnArgs, block, e);
-    return fn.codegen(Module.get());
+    return fn.codegen(Module.get(), Builder.get());
   }
 
   Report("Unkown");

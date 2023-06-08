@@ -82,12 +82,5 @@ int main(int argc, char **argv) {
     run_pass_on_module(syntax.Module.get(), argv[2]);
   }
 
-  if (!syntax.Errs.empty())
-    std::cout << "\nErrors:\n";
-
-  for (const auto &err : syntax.Errs) {
-    std::cout << err << std::endl;
-  }
-
   return (int)syntax.Errs.size();
 }

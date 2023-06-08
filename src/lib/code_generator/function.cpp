@@ -16,9 +16,8 @@ FunctionAST::FunctionAST(const std::string &Name, std::vector<std::string> Args,
 
 const std::string &FunctionAST::getName() const { return Name; }
 
-llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
-  auto Builder = llvm::IRBuilder(Module->getContext());
-
+llvm::Function *FunctionAST::codegen(llvm::Module *Module,
+                                     llvm::IRBuilder<> *Builder) {
   // TODO: handle parameters.
   std::vector<llvm::Type *> Empty(0);
 
@@ -34,9 +33,9 @@ llvm::Function *FunctionAST::codegen(llvm::Module *Module) {
       llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
 
   // eat G()
-  Builder.SetInsertPoint(BB);
+  Builder->SetInsertPoint(BB);
 
-  Builder.CreateRet(ReturnValue);
+  Builder->CreateRet(ReturnValue);
 
   return TheFunction;
 }
