@@ -10,27 +10,29 @@ using namespace tokens;
 namespace analysis {
 // For grammar checking
 llvm::Value *SyntaxChecker::G() {
-  NestLevel++;
-  Debug("G()");
+  if (CurrentToken == Token::tok_def) {
+    auto d = D();
+    if (!d)
+      Report("def");
 
-  for (Next(); CurrentToken != Token::tok_eof; Next()) {
-    if (CurrentToken == Token::tok_def && !D())
-      return nullptr;
-
-    // if either tok_identifier | tok_return we parse expr.
-    if (std::find(ExpressionTokens.begin(), ExpressionTokens.end(),
-                  CurrentToken) != ExpressionTokens.end()) {
-      auto e = E();
-
-      if (!e) {
-        Report("expression");
-      }
-
-      return e;
-    }
+    return d;
   }
 
-  NestLevel--;
+  if (CurrentToken == tokens::Token::tok_return) {
+    auto e = E();
+
+    if (!e) {
+      Report("expression");
+      return nullptr;
+    }
+
+    if (CurrentToken != Token::tok_end) {
+      Report("end");
+      return nullptr;
+    }
+
+    return e;
+  }
 
   return nullptr;
 }

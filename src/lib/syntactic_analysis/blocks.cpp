@@ -12,19 +12,15 @@ namespace analysis {
 llvm::Value *SyntaxChecker::B() {
   // For debugging purposes.
   NestLevel++;
-  Debug("B()");
-
-  // <DEFS>
-  auto g = G();
-
   Next();
 
-  if (CurrentToken == Token::tok_return) {
-    Next();
-  }
+  // TODO: <DEFS>
+  auto g = G();
+  while (nullptr != (g = G()))
+    ;
 
-  if (CurrentToken != Token::tok_close_curly) {
-    Report(";");
+  if (Next() != Token::tok_close_curly) {
+    Report("}");
     return nullptr;
   }
 

@@ -58,7 +58,7 @@ void SyntaxChecker::Report(const std::string &expected) {
   }
 
   oss << " at line " << Factory.CurrentLine + 1 << ", column "
-      << Factory.CaretPlace + 1;
+      << Factory.CaretPlace + 1 << std::endl;
 
   Debug(oss.str());
   llvm::errs() << oss.str();
@@ -69,8 +69,11 @@ void SyntaxChecker::Report(const std::string &expected) {
 }
 
 llvm::Expected<std::unique_ptr<SyntaxChecker>> SyntaxChecker::Codegen() {
-  if (!G()) {
-    llvm::errs() << "couldn't generate code.";
+  while (Next() != Token::tok_eof) {
+    if (!G()) {
+      Report("correct syntax");
+      break;
+    }
   }
 
   return nullptr;

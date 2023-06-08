@@ -4,14 +4,20 @@
 #include <string>
 
 #include "syntactic_analysis.h"
+#include "llvm/ADT/StringRef.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Type.h"
 
 using namespace tokens;
 
 namespace analysis {
 // For expressions
 llvm::Value *SyntaxChecker::E() {
+  auto Builder = llvm::IRBuilder(Module->getContext());
+
   NestLevel++;
-  Debug("E()");
   Next();
 
   if (CurrentToken == Token::tok_open_parenthesis) {
@@ -27,12 +33,12 @@ llvm::Value *SyntaxChecker::E() {
   }
 
   if (CurrentToken == Token::tok_double) {
+    auto value = Factory.CurrentNumericValue;
     Next();
 
     if (CurrentToken == Token::tok_end) {
       NestLevel--;
-      // return true;
-      return nullptr;
+      return llvm::ConstantFP::get(llvm::Type::getDoubleTy(Context), value);
     }
 
     if (CurrentToken == Token::tok_greater_than) {
@@ -47,8 +53,8 @@ llvm::Value *SyntaxChecker::E() {
   if (CurrentToken == Token::tok_string) {
     // consume text
     Next();
-    Debug("Token: " + From(CurrentToken) + " \"" + Factory.CurrentIdentifier +
-          "\"");
+    auto text = Factory.CurrentIdentifier;
+    Debug("Token: " + From(CurrentToken) + " \"" + text + "\"");
 
     // consume "
     Next();
@@ -69,8 +75,7 @@ llvm::Value *SyntaxChecker::E() {
     }
 
     NestLevel--;
-    // return true;
-    return nullptr;
+    return Builder.CreateGlobalStringPtr(llvm::StringRef(text));
   }
 
   return nullptr;

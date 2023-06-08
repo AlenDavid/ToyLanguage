@@ -12,7 +12,6 @@ namespace analysis {
 // Syntax check for definitions.
 llvm::Value *SyntaxChecker::D() {
   NestLevel++;
-  Debug("D()");
 
   // consume ID.
   Next();
@@ -57,22 +56,7 @@ llvm::Value *SyntaxChecker::D() {
 
     auto block = B();
 
-    if (Next() != Token::tok_return) {
-      Report("return");
-      NestLevel--;
-      return nullptr;
-    }
-
-    // consume <E>
-    auto e = E();
-
-    if (Next() != Token::tok_end) {
-      Report("end");
-      NestLevel--;
-      return nullptr;
-    }
-
-    auto fn = nodes::FunctionAST(fnName, fnArgs, block, e);
+    auto fn = nodes::FunctionAST(fnName, fnArgs, block, nullptr);
     return fn.codegen(Module.get());
   }
 
