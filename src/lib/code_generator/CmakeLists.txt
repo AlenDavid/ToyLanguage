@@ -3,4 +3,5 @@
 add_library(CodeGenerator
   function.cpp
   number.cpp
+  variable.cpp
 )
