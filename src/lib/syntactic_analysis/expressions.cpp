@@ -72,7 +72,6 @@ llvm::Value *SyntaxChecker::E() {
     if (CurrentToken != Token::tok_end) {
       Report(";");
       NestLevel--;
-      NestLevel--;
       return nullptr;
     }
 
@@ -80,6 +79,7 @@ llvm::Value *SyntaxChecker::E() {
     return Builder.CreateGlobalStringPtr(llvm::StringRef(text));
   }
 
+  NestLevel--;
   return nullptr;
 }
 } // namespace analysis
