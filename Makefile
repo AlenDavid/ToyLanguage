@@ -1,6 +1,7 @@
 SRC_DIR=.
 BUILD_DIR=./build
 TARGET=output.o
+OPTIONS=
 
 build: source
 	make -C ${BUILD_DIR}
@@ -23,7 +24,7 @@ run_compiled: compile
 	./main
 
 compile: build
-	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy ${TARGET} --verbose
+	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy ${TARGET} ${OPTIONS}
 
 playground: build
 	${BUILD_DIR}/tools/playground/Playground
