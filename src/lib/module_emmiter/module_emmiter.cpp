@@ -9,8 +9,7 @@
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Host.h"
 
-int run_pass_on_module(llvm::Module* Module, const char* Filename)
-{
+int run_pass_on_module(llvm::Module *Module, const char *Filename) {
   if (Filename == nullptr) {
     Filename = "output.o";
   }
@@ -32,7 +31,8 @@ int run_pass_on_module(llvm::Module* Module, const char* Filename)
 
   llvm::TargetOptions opt;
   auto RM = std::optional<llvm::Reloc::Model>();
-  auto TargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
+  auto TargetMachine =
+      Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
 
   Module->setDataLayout(TargetMachine->createDataLayout());
   Module->setTargetTriple(TargetTriple);
@@ -48,7 +48,8 @@ int run_pass_on_module(llvm::Module* Module, const char* Filename)
   // create object file
   llvm::legacy::PassManager pass;
 
-  if (TargetMachine->addPassesToEmitFile(pass, dest, nullptr, llvm::CGFT_ObjectFile)) {
+  if (TargetMachine->addPassesToEmitFile(pass, dest, nullptr,
+                                         llvm::CGFT_ObjectFile)) {
     llvm::errs() << "TargetMachine can't emit a file of this type";
     return 1;
   }
