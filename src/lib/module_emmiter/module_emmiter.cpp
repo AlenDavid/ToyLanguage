@@ -11,7 +11,6 @@
 #include <iostream>
 
 int run_pass_on_module(llvm::Module *Module, const char *Filename) {
-
   if (Filename == nullptr) {
     Filename = "output.o";
   }

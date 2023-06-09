@@ -76,5 +76,9 @@ int main(int argc, char **argv) {
 
   ExitOnError(syntax.Codegen());
 
-  run_pass_on_module(syntax.Module.get(), argv[2]);
+  if (debugging) {
+    syntax.Module.get()->print(llvm::errs(), nullptr, true, true);
+  } else {
+    run_pass_on_module(syntax.Module.get(), argv[2]);
+  }
 }
