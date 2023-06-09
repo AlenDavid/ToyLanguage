@@ -1,9 +1,14 @@
+#include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Instruction.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
+#include "llvm/IR/Value.h"
+#include "llvm/Support/FileSystem.h"
 #include "llvm/Support/TargetSelect.h"
 #include <iostream>
 #include <memory>
@@ -44,21 +49,31 @@ int main() {
 
   cout << "SetInsertPoint" << endl;
   Builder->SetInsertPoint(BB);
-  Value *v = ConstantInt::get(Type::getInt32Ty(ctx), 5);
+
+  auto Ty = Type::getInt64Ty(ctx);
+
+  Value *v = ConstantInt::get(Ty, 5);
 
   cout << "CreateAlloca" << endl;
-  auto *A = Builder->CreateAlloca(v->getType(), nullptr, "a");
+  auto *A = Builder->CreateAlloca(Ty, nullptr, "a");
 
   cout << "CreateStore" << endl;
-  auto store = Builder->CreateStore(v, A, false);
+  Builder->CreateStore(v, A, false);
 
-  Builder->CreateRet(v);
+  auto load = Builder->CreateLoad(Ty, A, "a");
+
+  Builder->CreateRet(load);
 
   cout << "Pass" << endl;
 
   if (Module.get()) {
     cout << Module.get()->getName().str() << endl;
   }
+
+  std::error_code EC;
+  llvm::raw_fd_ostream dest("playground.ll", EC, llvm::sys::fs::OF_None);
+
+  Module.get()->print(dest, nullptr, true, true);
 
   run_pass_on_module(Module.get(), "playground.o");
 

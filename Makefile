@@ -28,6 +28,7 @@ compile: build
 
 playground: build
 	${BUILD_DIR}/tools/playground/Playground
+	clang++ playground.o -o playground
 
 # delete build dir artifacts.
 clean:
