@@ -6,6 +6,7 @@
 #include "lib/code_generator/function.h"
 #include "lib/code_generator/variable.h"
 #include "syntactic_analysis.h"
+#include "llvm/IR/BasicBlock.h"
 
 using namespace tokens;
 
@@ -33,7 +34,7 @@ llvm::Value *SyntaxChecker::D() {
 
     NestLevel--;
     auto variable = nodes::VariableAST(name, e).codegen(Builder.get());
-    Variables[name] = variable;
+    Variables[name] = Builder->CreateLoad(e->getType(), variable, name);
 
     return variable;
   }
@@ -64,11 +65,8 @@ llvm::Value *SyntaxChecker::D() {
     llvm::Function *TheFunction = llvm::Function::Create(
         FT, llvm::Function::ExternalLinkage, name, *Module);
 
-    llvm::BasicBlock *BB =
-        llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
-
     // Block can be null for the sake of just a return exp.
-    Builder->SetInsertPoint(B(BB));
+    auto Block = llvm::cast<llvm::BasicBlock>(B(TheFunction));
 
     if (CurrentToken != tokens::Token::tok_return)
       return Expect("return");

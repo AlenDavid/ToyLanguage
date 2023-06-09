@@ -4,6 +4,7 @@
 
 #include "lib/lexical/lexical.h"
 #include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Function.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Value.h"
@@ -29,7 +30,11 @@ public:
   explicit SyntaxChecker(lexical::LexicalFactory &factory);
 
   tokens::Token Next();
-  llvm::BasicBlock *B(llvm::BasicBlock *);
+  // @deprecated
+  llvm::Value *B(llvm::BasicBlock *);
+
+  llvm::Value *B(llvm::Function *, const std::string &Name = "entry");
+
   llvm::Value *D();
   llvm::Value *E();
   llvm::Value *G();

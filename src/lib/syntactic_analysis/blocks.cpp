@@ -11,7 +11,8 @@ using namespace tokens;
 
 namespace analysis {
 // Syntax check for blocks of code.
-llvm::BasicBlock *SyntaxChecker::B(llvm::BasicBlock *BB) {
+// Deprecated.
+llvm::Value *SyntaxChecker::B(llvm::BasicBlock *BB) {
   // For debugging purposes.
   NestLevel++;
 
@@ -23,6 +24,20 @@ llvm::BasicBlock *SyntaxChecker::B(llvm::BasicBlock *BB) {
   }
 
   NestLevel--;
+  return BB;
+}
+
+llvm::Value *SyntaxChecker::B(llvm::Function *Parent, const std::string &Name) {
+  llvm::BasicBlock *BB =
+      llvm::BasicBlock::Create(Builder->getContext(), Name, Parent);
+
+  Builder->SetInsertPoint(BB);
+
+  while (Next() == tokens::Token::tok_def) {
+    if (!G())
+      return Expect("G");
+  }
+
   return BB;
 }
 } // namespace analysis

@@ -5,7 +5,7 @@ def main() {
   def anna = "anna";
   def david = 0;
   def david1 = 1;
-  def ret = 2;
+  def ret = 4;
 
-  return anna;
+  return ret;
 }

@@ -90,6 +90,7 @@ llvm::Value *SyntaxChecker::E() {
 
     Debug("Builder->createLoad");
 
+    // TODO: use Builder->CreateLoad();
     return var;
   }
 

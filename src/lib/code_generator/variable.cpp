@@ -25,18 +25,8 @@ llvm::Value *VariableAST::codegen(llvm::IRBuilder<> *Builder) {
 
   auto *A = Builder->CreateAlloca(Value->getType(), nullptr, Name);
 
-  if (!A) {
-    errs() << "could't allocate " << Name << '\n';
-    return nullptr;
-  }
-
   auto store = Builder->CreateStore(Value, A, false);
 
-  if (!store) {
-    errs() << "could't store " << Name << '\n';
-    return nullptr;
-  }
-
-  return Value;
+  return A;
 }
 } // namespace nodes
