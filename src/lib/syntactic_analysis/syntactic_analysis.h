@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "lib/lexical/lexical.h"
+#include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Value.h"
@@ -27,7 +28,7 @@ public:
   explicit SyntaxChecker(lexical::LexicalFactory &factory);
 
   tokens::Token Next();
-  llvm::Value *B();
+  llvm::BasicBlock *B(llvm::BasicBlock *);
   llvm::Value *D();
   llvm::Value *E();
   llvm::Value *G();

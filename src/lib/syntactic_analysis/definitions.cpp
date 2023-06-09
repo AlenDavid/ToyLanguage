@@ -73,10 +73,8 @@ llvm::Value *SyntaxChecker::D() {
     llvm::BasicBlock *BB =
         llvm::BasicBlock::Create(Module->getContext(), "entry", TheFunction);
 
-    Builder->SetInsertPoint(BB);
-
     // Block can be null for the sake of just a return exp.
-    B();
+    Builder->SetInsertPoint(B(BB));
 
     if (CurrentToken != tokens::Token::tok_return) {
       Report("return");
@@ -92,6 +90,8 @@ llvm::Value *SyntaxChecker::D() {
       return nullptr;
     }
 
+    Builder->CreateRet(e);
+
     if (CurrentToken != Token::tok_end) {
       Report("end");
       NestLevel--;
@@ -105,7 +105,6 @@ llvm::Value *SyntaxChecker::D() {
     }
 
     NestLevel--;
-    Builder->CreateRet(e);
 
     return TheFunction;
   }

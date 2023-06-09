@@ -4,20 +4,29 @@
 #include <string>
 
 #include "syntactic_analysis.h"
+#include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Value.h"
 
 using namespace tokens;
 
 namespace analysis {
 // Syntax check for blocks of code.
-llvm::Value *SyntaxChecker::B() {
+llvm::BasicBlock *SyntaxChecker::B(llvm::BasicBlock *BB) {
   // For debugging purposes.
   NestLevel++;
 
-  // TODO: <DEFS>
-  while (Next() == tokens::Token::tok_def)
-    G();
+  Builder->SetInsertPoint(BB);
 
-  return nullptr;
+  while (Next() == tokens::Token::tok_def) {
+    if (!G()) {
+      Report("G");
+      NestLevel--;
+      return nullptr;
+    }
+  }
+  llvm::errs() << "GS\n";
+
+  NestLevel--;
+  return BB;
 }
 } // namespace analysis
