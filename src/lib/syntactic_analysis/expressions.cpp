@@ -84,7 +84,13 @@ llvm::Value *SyntaxChecker::E() {
     // consume identifier
     Next();
 
-    return Variables[identifier];
+    auto var = Variables[identifier];
+    if (!var)
+      return Error("undefined var name");
+
+    Debug("Builder->createLoad");
+
+    return var;
   }
 
   NestLevel--;
