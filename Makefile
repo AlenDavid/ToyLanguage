@@ -1,7 +1,7 @@
 SRC_DIR=.
 BUILD_DIR=./build
 TARGET=output.o
-OPTIONS=
+OPTIONS=--emit-llvm
 
 build: source
 	make -C ${BUILD_DIR}
@@ -31,8 +31,7 @@ playground: build
 
 # delete build dir artifacts.
 clean:
-	@rm -rf ${BUILD_DIR}
-	@rm -f output.o main
+	@git clean -x -d -f
 
 # requires sudo access.
 install: build

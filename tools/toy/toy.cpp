@@ -34,6 +34,7 @@ using namespace tokens;
 
 int main(int argc, char **argv) {
   bool debugging = false;
+  bool emitLLVM = false;
 
   if (argc <= 2) {
     std::cout << Messages::USAGE << std::endl;
@@ -49,6 +50,8 @@ int main(int argc, char **argv) {
 
     if (std::strcmp(argv[i], "--verbose") == 0)
       debugging = true;
+    if (std::strcmp(argv[i], "--emit-llvm") == 0)
+      emitLLVM = true;
   }
 
   const auto code = file_contents(argv[1]);
@@ -76,9 +79,11 @@ int main(int argc, char **argv) {
 
   ExitOnError(syntax.Codegen());
 
-  if (debugging) {
-    syntax.Module.get()->print(llvm::errs(), nullptr, true, true);
-  } else {
-    run_pass_on_module(syntax.Module.get(), argv[2]);
+  if (emitLLVM) {
+    std::error_code EC;
+    llvm::raw_fd_ostream dest("llvm.ll", EC, llvm::sys::fs::OF_None);
+    syntax.Module.get()->print(dest, nullptr, true, true);
   }
+
+  run_pass_on_module(syntax.Module.get(), argv[2]);
 }
