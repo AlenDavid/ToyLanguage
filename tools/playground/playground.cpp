@@ -46,6 +46,8 @@ int main() {
       FT, llvm::Function::ExternalLinkage, "main", Module.get());
 
   llvm::BasicBlock *BB = llvm::BasicBlock::Create(ctx, "entry", TheFunction);
+  llvm::BasicBlock *OtherBlock =
+      llvm::BasicBlock::Create(ctx, "other", TheFunction);
 
   cout << "SetInsertPoint" << endl;
   Builder->SetInsertPoint(BB);
@@ -63,6 +65,16 @@ int main() {
   auto load = Builder->CreateLoad(Ty, A, "a");
 
   Builder->CreateRet(load);
+
+  Builder->SetInsertPoint(OtherBlock);
+
+  cout << "CreateAlloca" << endl;
+  A = Builder->CreateAlloca(Ty, nullptr, "a");
+
+  cout << "CreateStore" << endl;
+  Builder->CreateStore(v, A, false);
+
+  load = Builder->CreateLoad(Ty, A, "a");
 
   cout << "Pass" << endl;
 
