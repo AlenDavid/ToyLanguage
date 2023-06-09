@@ -21,7 +21,6 @@ llvm::BasicBlock *SyntaxChecker::B(llvm::BasicBlock *BB) {
     if (!G())
       return Expect("G");
   }
-  llvm::errs() << "GS\n";
 
   NestLevel--;
   return BB;

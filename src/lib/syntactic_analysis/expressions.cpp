@@ -33,6 +33,9 @@ llvm::Value *SyntaxChecker::E() {
   if (CurrentToken == Token::tok_double) {
     auto value = Factory.CurrentIntValue;
 
+    Debug("Token: " + From(CurrentToken) + " \"" + std::to_string(value) +
+          "\"");
+
     Next();
 
     if (CurrentToken == Token::tok_end) {
