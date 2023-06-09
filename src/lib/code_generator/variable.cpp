@@ -37,6 +37,6 @@ llvm::Value *VariableAST::codegen(llvm::IRBuilder<> *Builder) {
     return nullptr;
   }
 
-  return store;
+  return Value;
 }
 } // namespace nodes

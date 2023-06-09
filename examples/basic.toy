@@ -3,7 +3,7 @@
 # This will become a fn.
 def main() {
   def anna = "anna";
-  def b = 2;
+  def ret = 15;
 
-  return 0;
+  return ret;
 }

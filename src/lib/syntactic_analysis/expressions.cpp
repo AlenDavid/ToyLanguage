@@ -19,15 +19,14 @@ llvm::Value *SyntaxChecker::E() {
   Next();
 
   if (CurrentToken == Token::tok_open_parenthesis) {
-    E();
+    auto e = E();
     Next();
 
     if (CurrentToken != Token::tok_close_parenthesis) {
-      Expect(")");
-      NestLevel--;
-
-      return nullptr;
+      return Expect(")");
     }
+
+    return e;
   }
 
   if (CurrentToken == Token::tok_double) {
@@ -77,6 +76,15 @@ llvm::Value *SyntaxChecker::E() {
 
     NestLevel--;
     return Builder->CreateGlobalStringPtr(llvm::StringRef(text));
+  }
+
+  // <var>
+  if (CurrentToken == tokens::Token::tok_identifier) {
+    auto identifier = Factory.CurrentIdentifier;
+    // consume identifier
+    Next();
+
+    return Variables[identifier];
   }
 
   NestLevel--;

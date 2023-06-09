@@ -1,3 +1,4 @@
+#include <map>
 #include <string>
 #include <vector>
 
@@ -16,6 +17,8 @@ public:
 
   std::unique_ptr<llvm::Module> Module;
   std::unique_ptr<llvm::IRBuilder<>> Builder;
+
+  std::map<std::string, llvm::Value *> Variables;
 
   int NestLevel = 0;
   bool _Debug = false;

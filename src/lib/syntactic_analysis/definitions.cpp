@@ -32,7 +32,10 @@ llvm::Value *SyntaxChecker::D() {
       return Expect("expression");
 
     NestLevel--;
-    return nodes::VariableAST(name, e).codegen(Builder.get());
+    auto variable = nodes::VariableAST(name, e).codegen(Builder.get());
+    Variables[name] = variable;
+
+    return variable;
   }
 
   // <DEF> <ID> <PARAMS> <BLOCK>
@@ -68,20 +71,20 @@ llvm::Value *SyntaxChecker::D() {
     Builder->SetInsertPoint(B(BB));
 
     if (CurrentToken != tokens::Token::tok_return)
-      Expect("return");
+      return Expect("return");
 
     auto e = E();
 
     if (!e)
-      Expect("expression");
+      return Expect("expression");
 
     Builder->CreateRet(e);
 
     if (CurrentToken != Token::tok_end)
-      Expect("end");
+      return Expect("end");
 
     if (Next() != Token::tok_close_curly)
-      Expect("}");
+      return Expect("}");
 
     NestLevel--;
 

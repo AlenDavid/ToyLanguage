@@ -13,7 +13,7 @@ llvm::Value *SyntaxChecker::G() {
   if (CurrentToken == Token::tok_def) {
     auto d = D();
     if (!d)
-      return Error("def");
+      return Expect("def");
 
     return d;
   }
