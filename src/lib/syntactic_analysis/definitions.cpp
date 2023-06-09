@@ -16,28 +16,22 @@ llvm::Value *SyntaxChecker::D() {
 
   // consume ID.
   Next();
-  Debug("Token: " + From(CurrentToken) + " " + Factory.CurrentIdentifier);
+
   auto name = Factory.CurrentIdentifier;
 
-  if (CurrentToken != Token::tok_identifier) {
-    Expect("name");
-    NestLevel--;
-
-    return nullptr;
-  }
+  if (CurrentToken != Token::tok_identifier)
+    return Expect("name");
 
   Next();
 
   // <DEF> <ID> = <E>
   if (CurrentToken == Token::tok_equal) {
-    NestLevel--;
     auto e = E();
 
-    if (!e) {
-      Expect("expression");
-      return nullptr;
-    }
+    if (!e)
+      return Expect("expression");
 
+    NestLevel--;
     return nodes::VariableAST(name, e).codegen(Builder.get());
   }
 
@@ -58,11 +52,8 @@ llvm::Value *SyntaxChecker::D() {
       return nullptr;
     }
 
-    if (Next() != Token::tok_open_curly) {
+    if (Next() != Token::tok_open_curly)
       Expect("{");
-      NestLevel--;
-      return nullptr;
-    }
 
     llvm::FunctionType *FT = llvm::FunctionType::get(
         llvm::Type::getInt32Ty(Module->getContext()), Empty, false);
@@ -76,41 +67,27 @@ llvm::Value *SyntaxChecker::D() {
     // Block can be null for the sake of just a return exp.
     Builder->SetInsertPoint(B(BB));
 
-    if (CurrentToken != tokens::Token::tok_return) {
+    if (CurrentToken != tokens::Token::tok_return)
       Expect("return");
-      NestLevel--;
-      return nullptr;
-    }
 
     auto e = E();
 
-    if (!e) {
+    if (!e)
       Expect("expression");
-      NestLevel--;
-      return nullptr;
-    }
 
     Builder->CreateRet(e);
 
-    if (CurrentToken != Token::tok_end) {
+    if (CurrentToken != Token::tok_end)
       Expect("end");
-      NestLevel--;
-      return nullptr;
-    }
 
-    if (Next() != Token::tok_close_curly) {
+    if (Next() != Token::tok_close_curly)
       Expect("}");
-      NestLevel--;
-      return nullptr;
-    }
 
     NestLevel--;
 
     return TheFunction;
   }
 
-  Expect("Unkown");
-  NestLevel--;
-  return nullptr;
+  return Expect("Unkown");
 }
 } // namespace analysis

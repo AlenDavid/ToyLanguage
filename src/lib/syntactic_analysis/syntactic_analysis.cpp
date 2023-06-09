@@ -40,12 +40,14 @@ void SyntaxChecker::Debug(const std::string &message) const {
 }
 
 std::nullptr_t SyntaxChecker::Error(const std::string &message) {
+  NestLevel--;
   llvm::errs() << message << " at line " << Factory.CurrentLine + 1
                << ", column " << Factory.CaretPlace + 1 << "\n";
   return nullptr;
 }
 
 std::nullptr_t SyntaxChecker::Expect(const std::string &expected) {
+  NestLevel--;
   llvm::errs() << "expected: " << expected << " got: ";
 
   if (CurrentToken == Token::tok_identifier ||

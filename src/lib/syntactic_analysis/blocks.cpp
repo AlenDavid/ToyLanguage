@@ -18,11 +18,8 @@ llvm::BasicBlock *SyntaxChecker::B(llvm::BasicBlock *BB) {
   Builder->SetInsertPoint(BB);
 
   while (Next() == tokens::Token::tok_def) {
-    if (!G()) {
-      Expect("G");
-      NestLevel--;
-      return nullptr;
-    }
+    if (!G())
+      return Expect("G");
   }
   llvm::errs() << "GS\n";
 
