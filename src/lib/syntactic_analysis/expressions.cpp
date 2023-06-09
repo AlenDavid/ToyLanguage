@@ -29,28 +29,46 @@ llvm::Value *SyntaxChecker::E() {
     return e;
   }
 
+  // special case for unary - <E>;
+  if (CurrentToken == Token::tok_minus) {
+    auto LeftHandler = E();
+    NestLevel--;
+
+    return Builder->CreateMul(
+        llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), -1),
+        LeftHandler);
+  }
+
   if (CurrentToken == Token::tok_double) {
     auto LeftHandler = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context),
                                               Factory.CurrentIntValue);
     Next();
+    NestLevel--;
 
     // finish expression.
-    if (CurrentToken == Token::tok_end) {
-      NestLevel--;
+    if (CurrentToken == Token::tok_end)
       return LeftHandler;
-    }
 
     // TODO: handle >
     if (CurrentToken == Token::tok_greater_than) {
-      NestLevel--;
       return LeftHandler;
     }
 
     // finish +
-    if (CurrentToken == Token::tok_plus) {
-      NestLevel--;
+    if (CurrentToken == Token::tok_plus)
       return Builder->CreateAdd(LeftHandler, E());
-    }
+
+    // finish -
+    if (CurrentToken == Token::tok_minus)
+      return Builder->CreateSub(LeftHandler, E());
+
+    // finish *
+    if (CurrentToken == Token::tok_times)
+      return Builder->CreateMul(LeftHandler, E());
+
+    // finish /
+    if (CurrentToken == Token::tok_divider)
+      return Builder->CreateFDiv(LeftHandler, E());
 
     if (CurrentToken != Token::tok_end) {
       return Expect(";");
