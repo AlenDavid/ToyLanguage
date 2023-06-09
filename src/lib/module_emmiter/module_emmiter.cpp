@@ -1,6 +1,7 @@
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/Module.h"
+#include "llvm/IR/Verifier.h"
 #include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/TargetSelect.h"
@@ -11,6 +12,11 @@
 #include <iostream>
 
 int run_pass_on_module(llvm::Module *Module, const char *Filename) {
+  if (llvm::verifyModule(*Module)) {
+    llvm::errs() << "module is invalid";
+    return 1;
+  }
+
   if (Filename == nullptr) {
     Filename = "output.o";
   }
