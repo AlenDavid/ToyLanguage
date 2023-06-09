@@ -15,8 +15,6 @@ using namespace tokens;
 namespace analysis {
 // For expressions
 llvm::Value *SyntaxChecker::E() {
-  auto Builder = llvm::IRBuilder(Module->getContext());
-
   NestLevel++;
   Next();
 
@@ -25,7 +23,7 @@ llvm::Value *SyntaxChecker::E() {
     Next();
 
     if (CurrentToken != Token::tok_close_parenthesis) {
-      Report(")");
+      Expect(")");
       NestLevel--;
 
       return nullptr;
@@ -46,7 +44,7 @@ llvm::Value *SyntaxChecker::E() {
       return E();
     }
 
-    Report(";");
+    Expect(";");
     return nullptr;
   }
 
@@ -61,7 +59,7 @@ llvm::Value *SyntaxChecker::E() {
     Next();
 
     if (CurrentToken != Token::tok_string) {
-      Report("\"");
+      Expect("\"");
       NestLevel--;
       return nullptr;
     }
@@ -69,13 +67,13 @@ llvm::Value *SyntaxChecker::E() {
     Next();
 
     if (CurrentToken != Token::tok_end) {
-      Report(";");
+      Expect(";");
       NestLevel--;
       return nullptr;
     }
 
     NestLevel--;
-    return Builder.CreateGlobalStringPtr(llvm::StringRef(text));
+    return Builder->CreateGlobalStringPtr(llvm::StringRef(text));
   }
 
   NestLevel--;

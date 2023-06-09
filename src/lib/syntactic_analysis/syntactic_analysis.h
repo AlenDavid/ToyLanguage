@@ -20,8 +20,6 @@ public:
   int NestLevel = 0;
   bool _Debug = false;
 
-  std::vector<std::string> Errs;
-
   lexical::LexicalFactory &Factory;
   tokens::Token CurrentToken;
 
@@ -37,6 +35,7 @@ public:
 
   void EnableDebug();
   void Debug(const std::string &) const;
-  void Report(const std::string &);
+  nullptr_t Expect(const std::string &);
+  nullptr_t Error(const std::string &);
 };
 } // namespace analysis

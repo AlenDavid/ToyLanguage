@@ -20,7 +20,7 @@ llvm::Value *SyntaxChecker::D() {
   auto name = Factory.CurrentIdentifier;
 
   if (CurrentToken != Token::tok_identifier) {
-    Report("name");
+    Expect("name");
     NestLevel--;
 
     return nullptr;
@@ -34,7 +34,7 @@ llvm::Value *SyntaxChecker::D() {
     auto e = E();
 
     if (!e) {
-      Report("expression");
+      Expect("expression");
       return nullptr;
     }
 
@@ -53,13 +53,13 @@ llvm::Value *SyntaxChecker::D() {
     std::vector<llvm::Type *> Empty(0);
 
     if (CurrentToken != Token::tok_close_parenthesis) {
-      Report(")");
+      Expect(")");
       NestLevel--;
       return nullptr;
     }
 
     if (Next() != Token::tok_open_curly) {
-      Report("{");
+      Expect("{");
       NestLevel--;
       return nullptr;
     }
@@ -77,7 +77,7 @@ llvm::Value *SyntaxChecker::D() {
     Builder->SetInsertPoint(B(BB));
 
     if (CurrentToken != tokens::Token::tok_return) {
-      Report("return");
+      Expect("return");
       NestLevel--;
       return nullptr;
     }
@@ -85,7 +85,7 @@ llvm::Value *SyntaxChecker::D() {
     auto e = E();
 
     if (!e) {
-      Report("expression");
+      Expect("expression");
       NestLevel--;
       return nullptr;
     }
@@ -93,13 +93,13 @@ llvm::Value *SyntaxChecker::D() {
     Builder->CreateRet(e);
 
     if (CurrentToken != Token::tok_end) {
-      Report("end");
+      Expect("end");
       NestLevel--;
       return nullptr;
     }
 
     if (Next() != Token::tok_close_curly) {
-      Report("}");
+      Expect("}");
       NestLevel--;
       return nullptr;
     }
@@ -109,7 +109,7 @@ llvm::Value *SyntaxChecker::D() {
     return TheFunction;
   }
 
-  Report("Unkown");
+  Expect("Unkown");
   NestLevel--;
   return nullptr;
 }

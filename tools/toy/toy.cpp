@@ -76,11 +76,5 @@ int main(int argc, char **argv) {
 
   ExitOnError(syntax.Codegen());
 
-  if (syntax.Errs.empty()) {
-    std::cout << "Compiling code..." << std::endl;
-
-    run_pass_on_module(syntax.Module.get(), argv[2]);
-  }
-
-  return (int)syntax.Errs.size();
+  run_pass_on_module(syntax.Module.get(), argv[2]);
 }

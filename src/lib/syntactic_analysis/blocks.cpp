@@ -19,7 +19,7 @@ llvm::BasicBlock *SyntaxChecker::B(llvm::BasicBlock *BB) {
 
   while (Next() == tokens::Token::tok_def) {
     if (!G()) {
-      Report("G");
+      Expect("G");
       NestLevel--;
       return nullptr;
     }

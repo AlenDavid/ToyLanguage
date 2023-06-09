@@ -3,6 +3,7 @@
 #include "llvm/Support/Error.h"
 #include "llvm/Support/raw_ostream.h"
 #include <algorithm>
+#include <cstddef>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -38,42 +39,40 @@ void SyntaxChecker::Debug(const std::string &message) const {
   }
 }
 
-// Store analysis errors.
-void SyntaxChecker::Report(const std::string &expected) {
-  std::ostringstream oss;
+std::nullptr_t SyntaxChecker::Error(const std::string &message) {
+  llvm::errs() << message << " at line " << Factory.CurrentLine + 1
+               << ", column " << Factory.CaretPlace + 1 << "\n";
+  return nullptr;
+}
 
-  oss << "expected: " << expected << " got: ";
+std::nullptr_t SyntaxChecker::Expect(const std::string &expected) {
+  llvm::errs() << "expected: " << expected << " got: ";
 
   if (CurrentToken == Token::tok_identifier ||
       CurrentToken == Token::tok_string) {
-    oss << Factory.CurrentIdentifier;
+    llvm::errs() << Factory.CurrentIdentifier;
   }
 
-  if (CurrentToken == Token::tok_double)
-    oss << Factory.CurrentFloatValue;
+  else if (CurrentToken == Token::tok_double)
+    llvm::errs() << Factory.CurrentFloatValue;
 
-  if (CurrentToken == Token::tok_int)
-    oss << Factory.CurrentIntValue;
+  else if (CurrentToken == Token::tok_int)
+    llvm::errs() << Factory.CurrentIntValue;
 
   else {
-    oss << tokens::From(CurrentToken);
+    llvm::errs() << tokens::From(CurrentToken);
   }
 
-  oss << " at line " << Factory.CurrentLine + 1 << ", column "
-      << Factory.CaretPlace + 1;
+  llvm::errs() << " at line " << Factory.CurrentLine + 1 << ", column "
+               << Factory.CaretPlace + 1 << "\n";
 
-  llvm::errs() << oss.str() << "\n";
-  Errs.emplace_back(oss.str());
-
-  oss.clear();
+  return nullptr;
 }
 
 llvm::Expected<std::unique_ptr<SyntaxChecker>> SyntaxChecker::Codegen() {
   while (Next() != Token::tok_eof) {
-    if (!G()) {
-      Report("correct syntax");
-      break;
-    }
+    if (!G())
+      return Error("wrong grammar");
   }
 
   return nullptr;
