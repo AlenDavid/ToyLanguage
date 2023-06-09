@@ -18,11 +18,12 @@ llvm::Value *SyntaxChecker::D() {
   // consume ID.
   Next();
 
-  auto name = Factory.CurrentIdentifier;
-
   if (CurrentToken != Token::tok_identifier)
     return Expect("name");
 
+  auto name = Factory.CurrentIdentifier;
+
+  // consume = or (
   Next();
 
   // <DEF> <ID> = <E>
@@ -30,7 +31,7 @@ llvm::Value *SyntaxChecker::D() {
     auto e = E();
 
     if (!e)
-      return Expect("expression");
+      return Expect("def <id> = expression;");
 
     NestLevel--;
     auto variable = nodes::VariableAST(name, e).codegen(Builder.get());
@@ -74,7 +75,7 @@ llvm::Value *SyntaxChecker::D() {
     auto e = E();
 
     if (!e)
-      return Expect("expression");
+      return Expect("return <expression>;");
 
     Builder->CreateRet(e);
 

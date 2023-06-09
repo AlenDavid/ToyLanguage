@@ -46,8 +46,6 @@ int main() {
       FT, llvm::Function::ExternalLinkage, "main", Module.get());
 
   llvm::BasicBlock *BB = llvm::BasicBlock::Create(ctx, "entry", TheFunction);
-  llvm::BasicBlock *OtherBlock =
-      llvm::BasicBlock::Create(ctx, "other", TheFunction);
 
   cout << "SetInsertPoint" << endl;
   Builder->SetInsertPoint(BB);
@@ -55,26 +53,23 @@ int main() {
   auto Ty = Type::getInt64Ty(ctx);
 
   Value *v = ConstantInt::get(Ty, 5);
+  Value *v2 = ConstantInt::get(Ty, 7);
 
   cout << "CreateAlloca" << endl;
   auto *A = Builder->CreateAlloca(Ty, nullptr, "a");
+  auto *A2 = Builder->CreateAlloca(Ty, nullptr, "a");
 
   cout << "CreateStore" << endl;
   Builder->CreateStore(v, A, false);
+  Builder->CreateStore(v2, A2, false);
 
-  auto load = Builder->CreateLoad(Ty, A, "a");
+  cout << "CreateAdd" << endl;
+  auto load = Builder->CreateLoad(v->getType(), v, "vload");
+  auto load2 = Builder->CreateLoad(v2->getType(), v2, "v2load");
 
-  Builder->CreateRet(load);
+  auto add = Builder->CreateAdd(load, load2, "addtmp");
 
-  Builder->SetInsertPoint(OtherBlock);
-
-  cout << "CreateAlloca" << endl;
-  A = Builder->CreateAlloca(Ty, nullptr, "a");
-
-  cout << "CreateStore" << endl;
-  Builder->CreateStore(v, A, false);
-
-  load = Builder->CreateLoad(Ty, A, "a");
+  Builder->CreateRet(add);
 
   std::error_code EC;
   llvm::raw_fd_ostream dest("playground.ll", EC, llvm::sys::fs::OF_None);

@@ -2,10 +2,8 @@
 
 # This will become a fn.
 def main() {
-  def anna = "anna";
-  def david = 0;
-  def david1 = 1;
-  def ret = 4;
+  def david = 5 + 5;
+  def ret = 5 + david;
 
   return ret;
 }

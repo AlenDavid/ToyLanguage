@@ -30,24 +30,31 @@ llvm::Value *SyntaxChecker::E() {
   }
 
   if (CurrentToken == Token::tok_double) {
-    auto value = Factory.CurrentIntValue;
-
-    Debug("Token: " + From(CurrentToken) + " \"" + std::to_string(value) +
-          "\"");
-
+    auto LeftHandler = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context),
+                                              Factory.CurrentIntValue);
     Next();
 
+    // finish expression.
     if (CurrentToken == Token::tok_end) {
       NestLevel--;
-      return llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), value);
+      return LeftHandler;
     }
 
+    // TODO: handle >
     if (CurrentToken == Token::tok_greater_than) {
-      return E();
+      NestLevel--;
+      return LeftHandler;
     }
 
-    Expect(";");
-    return nullptr;
+    // finish +
+    if (CurrentToken == Token::tok_plus) {
+      NestLevel--;
+      return Builder->CreateAdd(LeftHandler, E());
+    }
+
+    if (CurrentToken != Token::tok_end) {
+      return Expect(";");
+    }
   }
 
   // "[\w\W]+"
