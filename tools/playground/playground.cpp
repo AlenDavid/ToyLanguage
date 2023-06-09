@@ -40,7 +40,7 @@ int main() {
   std::vector<llvm::Type *> Empty(0);
 
   llvm::FunctionType *FT =
-      llvm::FunctionType::get(llvm::Type::getInt32Ty(ctx), Empty, false);
+      llvm::FunctionType::get(llvm::Type::getVoidTy(ctx), Empty, false);
 
   llvm::Function *TheFunction = llvm::Function::Create(
       FT, llvm::Function::ExternalLinkage, "main", Module.get());
@@ -76,18 +76,10 @@ int main() {
 
   load = Builder->CreateLoad(Ty, A, "a");
 
-  cout << "Pass" << endl;
-
-  if (Module.get()) {
-    cout << Module.get()->getName().str() << endl;
-  }
-
   std::error_code EC;
   llvm::raw_fd_ostream dest("playground.ll", EC, llvm::sys::fs::OF_None);
 
   Module.get()->print(dest, nullptr, true, true);
-
-  run_pass_on_module(Module.get(), "playground.o");
 
   return 0;
 }

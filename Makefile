@@ -28,7 +28,8 @@ compile: build
 
 playground: build
 	${BUILD_DIR}/tools/playground/Playground
-	clang++ playground.o -o playground
+
+	@echo "\n[100%] Executed target Playground"
 
 # delete build dir artifacts.
 clean:
