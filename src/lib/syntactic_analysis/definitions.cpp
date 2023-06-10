@@ -58,8 +58,7 @@ llvm::Value *SyntaxChecker::D() {
       return nullptr;
     }
 
-    if (Next() != Token::tok_open_curly)
-      Expect("{");
+    // now we know its a function.
 
     llvm::FunctionType *FT = llvm::FunctionType::get(
         llvm::Type::getInt32Ty(Module->getContext()), Empty, false);
@@ -67,24 +66,8 @@ llvm::Value *SyntaxChecker::D() {
     llvm::Function *TheFunction = llvm::Function::Create(
         FT, llvm::Function::ExternalLinkage, name, *Module);
 
-    // Block can be null for the sake of just a return exp.
+    // Blocks can be empty.
     auto Block = llvm::cast<llvm::BasicBlock>(B(TheFunction));
-
-    if (CurrentToken != tokens::Token::tok_return)
-      return Expect("return");
-
-    auto e = E();
-
-    if (!e)
-      return Expect("return <expression>;");
-
-    Builder->CreateRet(e);
-
-    if (CurrentToken != Token::tok_end)
-      return Expect("end");
-
-    if (Next() != Token::tok_close_curly)
-      return Expect("}");
 
     NestLevel--;
 

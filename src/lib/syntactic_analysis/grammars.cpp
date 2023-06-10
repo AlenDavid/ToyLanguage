@@ -23,14 +23,23 @@ llvm::Value *SyntaxChecker::T() {
 }
 
 llvm::Value *SyntaxChecker::G() {
-  if (CurrentToken == Token::tok_def) {
-    auto d = D();
-    if (!d)
-      return nullptr;
+  // construct a definition
+  if (CurrentToken == Token::tok_def)
+    return D();
 
-    return d;
+  // construct a return
+  if (CurrentToken == tokens::Token::tok_return) {
+    auto e = E();
+
+    if (!e)
+      return Expect("return <expression>;");
+
+    if (CurrentToken != Token::tok_end)
+      return Expect("end");
+
+    return Builder->CreateRet(e);
   }
 
-  return nullptr;
+  return Error("unkown syntax");
 }
 } // namespace analysis

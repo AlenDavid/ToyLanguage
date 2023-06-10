@@ -1,6 +1,6 @@
 def main() {
   def v1 = 2;
-  def v1 = 5;
+  def v1 = 5 + v1;
 
   return v1;
 }
