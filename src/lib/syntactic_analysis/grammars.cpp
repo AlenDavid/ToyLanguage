@@ -9,6 +9,19 @@ using namespace tokens;
 
 namespace analysis {
 // For grammar checking
+llvm::Value *SyntaxChecker::T() {
+  if (CurrentToken == Token::tok_def) {
+    auto d = D();
+
+    if (!d)
+      return nullptr;
+
+    return d;
+  }
+
+  return nullptr;
+}
+
 llvm::Value *SyntaxChecker::G() {
   if (CurrentToken == Token::tok_def) {
     auto d = D();

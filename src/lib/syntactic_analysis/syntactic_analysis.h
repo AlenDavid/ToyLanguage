@@ -9,12 +9,16 @@
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Error.h"
+#include "llvm/Support/raw_ostream.h"
 
 #pragma once
 namespace analysis {
 class SyntaxChecker {
 public:
   llvm::LLVMContext Context = llvm::LLVMContext();
+
+  std::string errs;
+  llvm::raw_string_ostream OS;
 
   std::unique_ptr<llvm::Module> Module;
   std::unique_ptr<llvm::IRBuilder<>> Builder;
@@ -38,6 +42,7 @@ public:
   llvm::Value *D();
   llvm::Value *E();
   llvm::Value *G();
+  llvm::Value *T();
 
   llvm::Expected<std::unique_ptr<SyntaxChecker>> Codegen();
 

@@ -16,7 +16,8 @@ using namespace tokens;
 namespace analysis {
 SyntaxChecker::SyntaxChecker(lexical::LexicalFactory &factory)
     : Module(std::make_unique<llvm::Module>("toy language", Context)),
-      Builder(std::make_unique<llvm::IRBuilder<>>(Context)), Factory(factory) {}
+      Builder(std::make_unique<llvm::IRBuilder<>>(Context)), Factory(factory),
+      OS(errs) {}
 
 // Consume next token from Factory and assign to CurrentToken.
 Token SyntaxChecker::Next() {
@@ -28,7 +29,7 @@ Token SyntaxChecker::Next() {
 
 llvm::Expected<std::unique_ptr<SyntaxChecker>> SyntaxChecker::Codegen() {
   while (Next() != Token::tok_eof) {
-    if (!G())
+    if (!T())
       return Error("wrong grammar");
   }
 
