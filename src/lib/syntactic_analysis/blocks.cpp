@@ -5,7 +5,9 @@
 
 #include "syntactic_analysis.h"
 #include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/IR/Value.h"
+#include "llvm/Support/Casting.h"
 
 using namespace tokens;
 
@@ -28,6 +30,7 @@ llvm::Value *SyntaxChecker::B(llvm::BasicBlock *BB) {
 }
 
 llvm::Value *SyntaxChecker::B(llvm::Function *Parent, const std::string &Name) {
+  auto foundReturn = false;
   if (Next() != Token::tok_open_curly)
     Expect("{");
 
@@ -38,9 +41,16 @@ llvm::Value *SyntaxChecker::B(llvm::Function *Parent, const std::string &Name) {
 
   // multiple definitions, ifs, returns can exist
   while (Next() != tokens::Token::tok_close_curly) {
-    auto g = G(); // consume grammar
-    if (!g) {
-      return nullptr;
+    if (foundReturn)
+      continue;
+
+    auto grammar = G(); // consume grammar
+
+    // LLVM don't accept terminators in the middle of a block
+    // so we must continue the while loop until we found a }.
+    if (llvm::isa<llvm::ReturnInst>(grammar)) {
+      foundReturn = true;
+      continue;
     }
   }
 

@@ -1,6 +1,7 @@
 def main() {
-  def v1 = 2;
-  def v1 = 5 + v1;
+  def anna = 15;
+  # return 2;
 
-  return v1;
+  # never
+  return anna;
 }
