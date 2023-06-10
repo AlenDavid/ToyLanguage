@@ -1,9 +1,6 @@
-# LLVM will generate this as a module.
-
-# This will become a fn.
 def main() {
-  def tainan = "tainan";
-  def value = 10 * 5;
+  def v1 = 2;
+  def v1 = 5;
 
-  return value;
+  return v1;
 }
