@@ -4,6 +4,7 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/FileSystem.h"
+#include "llvm/Support/FormattedStream.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
@@ -12,8 +13,12 @@
 #include <iostream>
 
 int run_pass_on_module(llvm::Module *Module, const char *Filename) {
-  if (llvm::verifyModule(*Module)) {
-    llvm::errs() << "module is invalid";
+  std::error_code EC;
+  std::string errs = "";
+  llvm::raw_string_ostream OS(errs);
+
+  if (llvm::verifyModule(*Module, &OS)) {
+    llvm::errs() << errs << "\n";
     return 1;
   }
 
@@ -45,7 +50,6 @@ int run_pass_on_module(llvm::Module *Module, const char *Filename) {
   Module->setDataLayout(TargetMachine->createDataLayout());
   Module->setTargetTriple(TargetTriple);
 
-  std::error_code EC;
   llvm::raw_fd_ostream dest(Filename, EC, llvm::sys::fs::OF_None);
 
   if (EC) {

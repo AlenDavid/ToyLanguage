@@ -2,8 +2,8 @@
 
 # This will become a fn.
 def main() {
-  def david = -10;
-  def ret = 10 + david;
+  def tainan = "tainan";
+  def value = 25;
 
-  return ret;
+  return value;
 }

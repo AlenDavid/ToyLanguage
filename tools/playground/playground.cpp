@@ -1,3 +1,4 @@
+#include "llvm/ADT/APInt.h"
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
@@ -36,45 +37,50 @@ int main() {
 
   Module = make_unique<llvm::Module>("playground", ctx);
   Builder = make_unique<llvm::IRBuilder<>>(ctx);
+  auto Ty = Type::getInt32Ty(ctx);
+  auto TyBool = Type::getInt1Ty(ctx);
 
   std::vector<llvm::Type *> Empty(0);
-
-  llvm::FunctionType *FT =
-      llvm::FunctionType::get(llvm::Type::getVoidTy(ctx), Empty, false);
-
+  llvm::FunctionType *FT = llvm::FunctionType::get(Ty, Empty, false);
   llvm::Function *TheFunction = llvm::Function::Create(
       FT, llvm::Function::ExternalLinkage, "main", Module.get());
-
   llvm::BasicBlock *BB = llvm::BasicBlock::Create(ctx, "entry", TheFunction);
 
-  cout << "SetInsertPoint" << endl;
   Builder->SetInsertPoint(BB);
 
-  auto Ty = Type::getInt64Ty(ctx);
+  auto CreateInt = [Ty](int V) { return ConstantInt::get(Ty, V); };
+  auto CreateBool = [TyBool](int V) { return ConstantInt::get(TyBool, V); };
 
-  Value *v = ConstantInt::get(Ty, 5);
-  Value *v2 = ConstantInt::get(Ty, 7);
+  Value *True = CreateBool(1);
+  Value *False = CreateBool(0);
 
-  cout << "CreateAlloca" << endl;
   auto *A = Builder->CreateAlloca(Ty, nullptr, "a");
-  auto *A2 = Builder->CreateAlloca(Ty, nullptr, "a");
 
-  cout << "CreateStore" << endl;
-  Builder->CreateStore(v, A, false);
-  Builder->CreateStore(v2, A2, false);
+  llvm::BasicBlock *Ablablueble =
+      llvm::BasicBlock::Create(ctx, "ablabluble", TheFunction);
+  llvm::BasicBlock *Then = llvm::BasicBlock::Create(ctx, "then", TheFunction);
+  llvm::BasicBlock *After = llvm::BasicBlock::Create(ctx, "after", TheFunction);
 
-  cout << "CreateAdd" << endl;
-  auto load = Builder->CreateLoad(v->getType(), v, "vload");
-  auto load2 = Builder->CreateLoad(v2->getType(), v2, "v2load");
+  // Builder->CreateCondBr(True, Ablablueble, Ablablueble);
+  Builder->CreateBr(Ablablueble);
 
-  auto add = Builder->CreateAdd(load, load2, "addtmp");
+  Builder->SetInsertPoint(Ablablueble);
+  Builder->CreateRet(CreateInt(1));
 
-  Builder->CreateRet(add);
+  Builder->SetInsertPoint(Then);
+  Builder->CreateRet(CreateInt(2));
+
+  Builder->SetInsertPoint(After);
+
+  Builder->CreateStore(CreateInt(3), A, false);
+  auto load = Builder->CreateLoad(Ty, A, "vload");
+
+  Builder->CreateRet(load);
 
   std::error_code EC;
   llvm::raw_fd_ostream dest("playground.ll", EC, llvm::sys::fs::OF_None);
 
   Module.get()->print(dest, nullptr, true, true);
 
-  return 0;
+  return run_pass_on_module(Module.get(), "playground.o");
 }

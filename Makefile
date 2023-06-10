@@ -23,6 +23,10 @@ run_compiled: compile
 	clang++ ${TARGET} -o main
 	./main
 
+run_playground: playground
+	clang++ playground.o -o playground
+	./playground
+
 compile: build
 	${BUILD_DIR}/tools/toy/Toy ./examples/basic.toy ${TARGET} ${OPTIONS}
 
