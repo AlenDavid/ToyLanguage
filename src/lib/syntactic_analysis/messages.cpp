@@ -9,7 +9,6 @@
 #include <sstream>
 #include <string>
 
-#include "lib/code_generator/function.h"
 #include "syntactic_analysis.h"
 
 using namespace tokens;

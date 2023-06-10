@@ -3,10 +3,9 @@
 #include <sstream>
 #include <string>
 
-#include "lib/code_generator/function.h"
-#include "lib/code_generator/variable.h"
 #include "syntactic_analysis.h"
 #include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Function.h"
 
 using namespace tokens;
 
@@ -34,10 +33,12 @@ llvm::Value *SyntaxChecker::D() {
       return Expect("def <id> = expression;");
 
     NestLevel--;
-    auto variable = nodes::VariableAST(name, e).codegen(Builder.get());
-    Variables[name] = Builder->CreateLoad(e->getType(), variable, name);
 
-    return variable;
+    auto *A = Builder->CreateAlloca(e->getType(), nullptr, name);
+    auto store = Builder->CreateStore(e, A, false);
+
+    Variables[name] = Builder->CreateLoad(e->getType(), A, name);
+    return A;
   }
 
   // <DEF> <ID> <PARAMS> <BLOCK>

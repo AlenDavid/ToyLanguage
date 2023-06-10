@@ -4,7 +4,6 @@ add_subdirectory(syntactic_analysis)
 add_subdirectory(input_parser)
 add_subdirectory(messages)
 add_subdirectory(module_emmiter)
-add_subdirectory(code_generator)
 add_subdirectory(lexical)
 add_subdirectory(tokens)
 
@@ -186,7 +185,6 @@ llvm_map_components_to_libnames(LLVM_LIBS
 
 target_link_libraries(
   SyntacticAnalysis
-  CodeGenerator
   ${LLVM_LIBS}
   InputParser
   ModuleEmmiter
