@@ -42,11 +42,12 @@ llvm::Value *SyntaxChecker::E() {
   if (CurrentToken == Token::tok_double) {
     auto LeftHandler = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context),
                                               Factory.CurrentIntValue);
-    Next();
     NestLevel--;
+    Next();
 
     // finish expression.
-    if (CurrentToken == Token::tok_end)
+    if (CurrentToken == Token::tok_end ||
+        CurrentToken == tokens::Token::tok_close_parenthesis)
       return LeftHandler;
 
     // TODO: handle >
@@ -69,10 +70,6 @@ llvm::Value *SyntaxChecker::E() {
     // finish /
     if (CurrentToken == Token::tok_divider)
       return Builder->CreateFDiv(LeftHandler, E());
-
-    if (CurrentToken != Token::tok_end) {
-      return Expect(";");
-    }
   }
 
   // "[\w\W]+"

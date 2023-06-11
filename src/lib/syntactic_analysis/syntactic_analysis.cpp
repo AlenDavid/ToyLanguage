@@ -30,7 +30,7 @@ Token SyntaxChecker::Next() {
 llvm::Expected<std::unique_ptr<SyntaxChecker>> SyntaxChecker::Codegen() {
   while (Next() != Token::tok_eof) {
     if (!T())
-      return Error("wrong grammar");
+      return nullptr;
   }
 
   return nullptr;

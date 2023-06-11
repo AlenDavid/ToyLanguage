@@ -67,7 +67,9 @@ llvm::Value *SyntaxChecker::D() {
         FT, llvm::Function::ExternalLinkage, name, *Module);
 
     // Blocks can be empty.
-    auto Block = llvm::cast<llvm::BasicBlock>(B(TheFunction));
+    auto b = B(TheFunction);
+    if (!b)
+      return nullptr;
 
     NestLevel--;
 

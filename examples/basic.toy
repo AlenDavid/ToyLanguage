@@ -1,7 +1,7 @@
 def main() {
-  def anna = 15;
-  # return 2;
+  if(0) {
+    return 1;
+  }
 
-  # never
-  return anna;
+  return 2;
 }

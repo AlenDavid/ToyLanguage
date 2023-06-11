@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <ostream>
 #include <sstream>
 #include <string>
 
@@ -12,48 +13,42 @@
 using namespace tokens;
 
 namespace analysis {
-// Syntax check for blocks of code.
-// Deprecated.
-llvm::Value *SyntaxChecker::B(llvm::BasicBlock *BB) {
-  // For debugging purposes.
-  NestLevel++;
-
-  Builder->SetInsertPoint(BB);
-
-  while (Next() == tokens::Token::tok_def) {
-    if (!G())
-      return Expect("G");
-  }
-
-  NestLevel--;
-  return BB;
-}
-
 llvm::Value *SyntaxChecker::B(llvm::Function *Parent, const std::string &Name) {
   auto foundReturn = false;
   if (Next() != Token::tok_open_curly)
     Expect("{");
+
+  NestLevel++;
 
   llvm::BasicBlock *BB =
       llvm::BasicBlock::Create(Builder->getContext(), Name, Parent);
 
   Builder->SetInsertPoint(BB);
 
-  // multiple definitions, ifs, returns can exist
-  while (Next() != tokens::Token::tok_close_curly) {
-    if (foundReturn)
-      continue;
+  // consume {
+  Next();
 
-    auto grammar = G(); // consume grammar
+  // multiple definitions, ifs, returns can exist
+  while (CurrentToken != tokens::Token::tok_close_curly &&
+         CurrentToken != tokens::Token::tok_eof) {
+    auto grammar = G(Parent); // consume grammar
+
+    if (Errored)
+      break;
 
     // LLVM don't accept terminators in the middle of a block
-    // so we must continue the while loop until we found a }.
-    if (llvm::isa<llvm::ReturnInst>(grammar)) {
-      foundReturn = true;
-      continue;
+    // so we must break the while loop.
+    if (grammar && llvm::isa<llvm::ReturnInst>(grammar)) {
+      break;
     }
+
+    Next();
   }
 
+  if (Next() != Token::tok_close_curly)
+    return Expect("}");
+
+  NestLevel--;
   return BB;
 }
 } // namespace analysis

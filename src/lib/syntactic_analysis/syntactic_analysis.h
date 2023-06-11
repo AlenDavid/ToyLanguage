@@ -26,6 +26,7 @@ public:
   std::map<std::string, llvm::Value *> Variables;
 
   int NestLevel = 0;
+  bool Errored = false;
   bool _Debug = false;
 
   lexical::LexicalFactory &Factory;
@@ -34,15 +35,12 @@ public:
   explicit SyntaxChecker(lexical::LexicalFactory &factory);
 
   tokens::Token Next();
-  // @deprecated
-  llvm::Value *B(llvm::BasicBlock *);
 
-  llvm::Value *B(llvm::Function *, const std::string &Name = "entry");
-
-  llvm::Value *D();
-  llvm::Value *E();
-  llvm::Value *G();
   llvm::Value *T();
+  llvm::Value *E();
+  llvm::Value *G(llvm::Function *Parent);
+  llvm::Value *B(llvm::Function *, const std::string &Name = "entry");
+  llvm::Value *D();
 
   llvm::Expected<std::unique_ptr<SyntaxChecker>> Codegen();
 
