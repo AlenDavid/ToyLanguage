@@ -61,8 +61,9 @@ llvm::Value *SyntaxChecker::G(llvm::Function *Parent) {
 
     auto afterBlock = llvm::BasicBlock::Create(Context, "after", Parent);
 
+    e->mutateType(TyBool);
     Builder->SetInsertPoint(currentBlock);
-    Builder->CreateCondBr(True, ifBlock, afterBlock);
+    Builder->CreateCondBr(e, ifBlock, afterBlock);
     Builder->SetInsertPoint(afterBlock);
   }
 
