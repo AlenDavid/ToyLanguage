@@ -45,6 +45,11 @@ Token LexicalFactory::punctTokens() {
     return Token::tok_greater_than;
   }
 
+  if (CurrentIdentifier == "<") {
+    Tokens.push_back(Token::tok_smaller_than);
+    return Token::tok_smaller_than;
+  }
+
   if (CurrentIdentifier == "+") {
     Tokens.push_back(Token::tok_plus);
     return Token::tok_plus;
