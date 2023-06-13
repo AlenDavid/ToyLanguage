@@ -31,6 +31,7 @@ enum class Token {
   tok_if = -56,
   tok_for = -57,
   tok_greater_than = -58,
+  tok_smaller_than = -59,
 
   // helpers only
   no_token = -999,

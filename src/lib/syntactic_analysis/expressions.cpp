@@ -50,9 +50,22 @@ llvm::Value *SyntaxChecker::E() {
         CurrentToken == tokens::Token::tok_close_parenthesis)
       return LeftHandler;
 
-    // TODO: handle >
+    // finish <
+    if (CurrentToken == Token::tok_smaller_than) {
+      auto L =
+          Builder->CreateUIToFP(LeftHandler, llvm::Type::getDoubleTy(Context));
+      auto R = Builder->CreateUIToFP(E(), llvm::Type::getDoubleTy(Context));
+
+      return Builder->CreateFCmpULT(L, R, "comp");
+    }
+
+    // finish >
     if (CurrentToken == Token::tok_greater_than) {
-      return LeftHandler;
+      auto L =
+          Builder->CreateUIToFP(LeftHandler, llvm::Type::getDoubleTy(Context));
+      auto R = Builder->CreateUIToFP(E(), llvm::Type::getDoubleTy(Context));
+
+      return Builder->CreateFCmpUGT(L, R, "comp");
     }
 
     // finish +

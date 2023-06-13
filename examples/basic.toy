@@ -1,5 +1,7 @@
 def main() {
-  if(2-2) {
+  def should = 0 > 3;
+
+  if(should) {
     return 1;
   }
 
